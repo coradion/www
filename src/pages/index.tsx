@@ -129,6 +129,9 @@ const IndexPage: FunctionComponent = () => {
         />
         <title>Coradion</title>
       </Head>
+      <Main>
+        <Card>Grocery list</Card>
+      </Main>
       <Aside>
         <IconButton>
           <CoradionLogo />
@@ -136,9 +139,6 @@ const IndexPage: FunctionComponent = () => {
         <IconButton>👤</IconButton>
         <IconButton>➕</IconButton>
       </Aside>
-      <Main>
-        <Card>Grocery list</Card>
-      </Main>
       {/*      <StackedColorSquare>
         <CoradionLogo size="61.8%" />
         <WordMark>coradion</WordMark>
