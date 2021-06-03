@@ -1,12 +1,15 @@
-import React, { ReactNode } from 'react'
-import Head from 'next/head'
+import React, { ReactNode } from "react";
+import Head from "next/head";
 
 type Props = {
-  children?: ReactNode
-  title?: string
-}
+  children?: ReactNode;
+  title?: string;
+};
 
-export const Layout = ({ children, title = 'This is the default title' }: Props) => (
+export const Layout = ({
+  children,
+  title = "This is the default title",
+}: Props) => (
   <>
     <Head>
       <title>{title}</title>
