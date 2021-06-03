@@ -1,5 +1,5 @@
 import { AppProps } from "next/app";
-import "fontsource-public-sans";
+import "@fontsource/public-sans";
 import { createGlobalStyle, css, ThemeProvider } from "styled-components";
 import { darken, setLightness, transparentize } from "polished";
 
@@ -52,13 +52,14 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-export const withTheme = (
-  App: ({ Component, pageProps }: AppProps) => JSX.Element
-) => (props: AppProps) => (
-  <>
-    <GlobalStyle />
-    <ThemeProvider theme={theme}>
-      <App {...props} />
-    </ThemeProvider>
-  </>
-);
+export const withTheme =
+  (App: ({ Component, pageProps }: AppProps) => JSX.Element) =>
+  (props: AppProps) =>
+    (
+      <>
+        <GlobalStyle />
+        <ThemeProvider theme={theme}>
+          <App {...props} />
+        </ThemeProvider>
+      </>
+    );

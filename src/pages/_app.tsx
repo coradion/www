@@ -3,7 +3,6 @@ import { AppProps } from "next/app";
 import { Workbox } from "workbox-window";
 import { Layout } from "../layout";
 import { withTheme } from "../layout/theme";
-import MyWorker from "worker-loader!../workers/my.worker";
 import { firebaseConfig } from "../shared/firebase-config";
 
 import "../../public/fonts/fonts.css";
@@ -20,11 +19,13 @@ const initializeFirebase = async () => {
 
 const App = ({ Component, pageProps }: AppProps) => {
   useEffect(() => {
-    const wb = new Workbox("/service.worker.js");
+    const wb = new Workbox("/_next/static/chunks/service.worker.js");
     wb.register();
     wb.messageSW({ type: "auth", payload: { provider: "google" } });
     initializeFirebase().catch(console.error);
-    const myWorker = new MyWorker();
+    const myWorker = new Worker(
+      new URL("../workers/my.worker", import.meta.url)
+    );
     myWorker.postMessage({ test: "test" });
   }, []);
   return (
