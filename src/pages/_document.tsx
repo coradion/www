@@ -1,4 +1,4 @@
-import Document from "next/document";
+import Document, { Html, Head, Main, NextScript } from "next/document";
 import { ServerStyleSheet } from "styled-components";
 import React from "react";
 
@@ -21,4 +21,23 @@ export default class extends Document {
     serverStyleSheet.seal();
     return { ...initialProps, styles };
   };
+
+  render() {
+    return (
+      <Html lang="en">
+        <Head>
+          <script
+            id="gapi"
+            src="https://apis.google.com/js/client:platform.js"
+            async
+            defer
+          />
+        </Head>
+        <body>
+          <Main />
+          <NextScript />
+        </body>
+      </Html>
+    );
+  }
 }
