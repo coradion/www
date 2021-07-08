@@ -1,13 +1,14 @@
 import Document, { Html, Head, Main, NextScript } from "next/document";
 import { ServerStyleSheet } from "styled-components";
 import React from "react";
+import { AppType, Enhancer } from "next/dist/next-server/lib/utils";
 
 export default class extends Document {
   static getInitialProps: typeof Document.getInitialProps = async (context) => {
     const serverStyleSheet = new ServerStyleSheet();
     context.renderPage = new Proxy(context.renderPage, {
       apply: (target) => {
-        const enhanceApp = (App) => (props) =>
+        const enhanceApp: Enhancer<AppType> = (App) => (props) =>
           serverStyleSheet.collectStyles(<App {...props} />);
         return target({ enhanceApp });
       },
@@ -25,14 +26,7 @@ export default class extends Document {
   render() {
     return (
       <Html lang="en">
-        <Head>
-          <script
-            id="gapi"
-            src="https://apis.google.com/js/client:platform.js"
-            async
-            defer
-          />
-        </Head>
+        <Head />
         <body>
           <Main />
           <NextScript />
