@@ -1,7 +1,7 @@
-import { AppProps } from "next/app";
 import "@fontsource/public-sans";
 import { createGlobalStyle, css, ThemeProvider } from "styled-components";
 import { darken, setLightness, transparentize } from "polished";
+import { ComponentType } from "react";
 
 const theme = {
   colors: {
@@ -20,7 +20,8 @@ const theme = {
         ${transparentize(0.9, "seashell")},
         ${transparentize(0.8, "seashell")}
       );
-      border: thin outset ${transparentize(0.8, "seashell")};
+      //border: thin outset ${transparentize(0.8, "seashell")};
+      border: none;
       border-radius: 1rem;
       backdrop-filter: blur(0.25rem);
       box-shadow: rgba(0, 0, 0, 0.2) 0.618rem 0.618rem 1.618rem;
@@ -36,6 +37,7 @@ const GlobalStyle = createGlobalStyle`
   h1, h2, h3, h4, h5, h6, p, button {
     color: ${transparentize(0.2, "seashell")};
   }
+
   body {
     background: url(https://media.bahai.org/static/mezzo-a44facdf5007a07d3a16a780f2c3b5ae.png), linear-gradient(-45deg, ${
       theme.colors.greys[0]
@@ -47,19 +49,20 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
     padding: 0.5rem;
   }
+
   #__next {
     display: contents;
   }
 `;
 
-export const withTheme =
-  (App: ({ Component, pageProps }: AppProps) => JSX.Element) =>
-  (props: AppProps) =>
-    (
-      <>
-        <GlobalStyle />
-        <ThemeProvider theme={theme}>
-          <App {...props} />
-        </ThemeProvider>
-      </>
-    );
+type WithTheme = <T>(Component: ComponentType<T>) => ComponentType<T>;
+
+export const withTheme: WithTheme = (App) => (props) =>
+  (
+    <>
+      <GlobalStyle />
+      <ThemeProvider theme={theme}>
+        <App {...props} />
+      </ThemeProvider>
+    </>
+  );
