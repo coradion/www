@@ -19,7 +19,7 @@ module.exports = {
           },
           plugins: [
             new InjectManifest({
-              swSrc: resolve(dir, "src", "workers", "service.ts"),
+              swSrc: resolve(dir, "src", "workers", "service"),
               swDest: resolve(
                 config.output.path,
                 "static",
