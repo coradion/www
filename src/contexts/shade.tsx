@@ -39,6 +39,8 @@ const Shade = styled.div<ShadeProps>`
   z-index: 10;
 `;
 
+Shade.displayName = "Shade";
+
 type WithShadeContext = <T>(Component: ComponentType<T>) => ComponentType<T>;
 
 export const withShade: WithShadeContext = (Component) => (props) => {
