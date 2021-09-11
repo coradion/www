@@ -1,5 +1,5 @@
 {
-  "name": "with-typescript",
+  "name": "@coradion/www",
   "version": "1.0.0",
   "scripts": {
     "dev": "next dev",
@@ -8,10 +8,11 @@
     "type-check": "tsc"
   },
   "dependencies": {
+    "@coradion/ui": "^1.0.2",
     "@fontsource/public-sans": "^4.4.2",
     "@iconscout/react-unicons-monochrome": "0.0.5",
     "dotenv": "^10.0.0",
-    "firebase": "exp",
+    "firebase": "^9.0.0-beta.7",
     "formik": "^2.2.9",
     "next": "^11.0.1",
     "polished": "^4.0.5",

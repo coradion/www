@@ -33,6 +33,9 @@ const ProfilePhoto = styled.img`
 
 const Pane = styled.div`
   ${(p) => p.theme.css.glass};
+  )flex: 1;
+  margin: 1rem;
+  padding: 1rem;
 `;
 
 const LoginContainer = styled.div`
@@ -111,8 +114,6 @@ const ProfilePage = () => {
       <Pane>
         <ProfilePhoto src={user?.photoURL ?? ""} />
         <Name>{user?.displayName ?? "Anonymous"}</Name>
-      </Pane>
-      <Pane>
         <h4>Connected Accounts</h4>
         {Object.entries(authProviders).map(([key, { name, getProvider }]) => (
           <button
