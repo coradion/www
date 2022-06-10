@@ -8,7 +8,7 @@ import {
 import { firebaseConfig } from "../shared/firebase-config";
 import { initializeApp, deleteApp, FirebaseApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { addDoc, collection, initializeFirestore } from "firebase/firestore";
+//import { addDoc, collection, initializeFirestore } from "firebase/firestore";
 
 const FirebaseContext = createContext<FirebaseApp | null>(null);
 
@@ -34,6 +34,7 @@ export const withFirebase: WithFirebase = (Component) => (props) => {
     */
     setFirebaseApp(newFirebaseApp);
     return () => {
+      if(firebaseApp === null) return;
       deleteApp(newFirebaseApp);
       setFirebaseApp(null);
     };

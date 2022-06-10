@@ -7,7 +7,7 @@
     "lib": [
       "dom",
       "es2017",
-      "webworker",
+      "webworker"
     ],
     "module": "esnext",
     "moduleResolution": "node",
@@ -17,7 +17,8 @@
     "noUnusedParameters": true,
     "resolveJsonModule": true,
     "target": "esnext",
-    "baseUrl": "src"
+    "baseUrl": "src",
+    "incremental": true
   },
   "exclude": [
     "node_modules"

@@ -22,7 +22,6 @@ const state: CoradionServiceWorkerState = {
     persistence: indexedDBLocalPersistence,
   }),
   firestore: initializeFirestore(firebaseApp, {
-    useFetchStreams: true,
     experimentalAutoDetectLongPolling: true,
   }),
 };
