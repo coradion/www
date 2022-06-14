@@ -1,24 +1,19 @@
 import {
-  ComponentType,
-  createContext,
+  createContext, Dispatch,
   useContext,
   useEffect,
   useReducer,
 } from "react";
-import { AppProps } from "next/app";
 import { Workbox } from "workbox-window";
 import { WorkboxMessageEvent } from "workbox-window/utils/WorkboxEvent";
+import {WithAppProps} from "./shared.types";
 
-type ServiceWorker = {
+type ServiceWorkerState = {
   user: any;
+  dispatch: Dispatch<DispatchParams>;
 };
 
-const initialState = {
-  workbox: null,
-  user: null,
-};
-
-const ServiceWorkerContext = createContext<ServiceWorker>(initialState);
+const ServiceWorkerContext = createContext<ServiceWorkerState | null>(null);
 
 export const useServiceWorker = () => {
   const context = useContext(ServiceWorkerContext);
@@ -27,27 +22,31 @@ export const useServiceWorker = () => {
   return context;
 };
 
-type WithPageProps = <T>(
-  Component: ComponentType<AppProps<T>>
-) => ComponentType<AppProps<T>>;
-
 const reducers = {
-  setUser: (state, user) => ({ ...state, user }),
-  createTask: ({ workbox }, payload) => {
+  setUser: (state: ServiceWorkerState, user: any) => ({ ...state, user }),
+  createTask: ({ workbox }: any, payload: any) => {
     if (workbox === null) throw new Error("workbox not defined");
     return workbox.messageSW({ type: "createTask", payload });
   },
-};
+} as const;
+
+type Reducers = typeof reducers;
+
+type ReducerKeys = keyof Reducers;
+
+type DispatchParams = {
+  [K in ReducerKeys]: {type: K, payload: Parameters<Reducers[K]>[1]}
+}[ReducerKeys]
 
 /**
  * @todo The name of this needs to be improved
  */
-const selectReducer = (state, { type, payload }) => {
+const selectReducer = (state: ServiceWorkerState, { type, payload }: DispatchParams) => {
   const { [type]: reducer = null } = reducers;
   return reducer !== null ? reducer(state, payload) : undefined;
 };
 
-const init = (state) =>
+const init = (state: ServiceWorkerState) =>
   typeof window === "undefined"
     ? state
     : {
@@ -55,8 +54,8 @@ const init = (state) =>
         workbox: new Workbox("/_next/static/chunks/service.worker.js"),
       };
 
-export const withServiceWorker: WithPageProps = (Component) => (props) => {
-  const [state, dispatch] = useReducer(selectReducer, initialState, init);
+export const withServiceWorker: WithAppProps = (Component) => (props) => {
+  const [state, dispatch] = useReducer(selectReducer, {}, init);
   useEffect(() => {
     if (state.workbox === null) return;
     const eventReducer = ({ data, ...restOfData }: WorkboxMessageEvent) => {

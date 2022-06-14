@@ -1,7 +1,7 @@
 import "@fontsource/public-sans";
 import { createGlobalStyle, css, ThemeProvider } from "styled-components";
 import { darken, setLightness, transparentize } from "polished";
-import { ComponentType } from "react";
+import {WithAppProps} from "../contexts/shared.types";
 
 const theme = {
   colors: {
@@ -55,9 +55,7 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-type WithTheme = <T>(Component: ComponentType<T>) => ComponentType<T>;
-
-export const withTheme: WithTheme = (App) => (props) =>
+export const withTheme: WithAppProps = (App) => (props) =>
   (
     <>
       <GlobalStyle />

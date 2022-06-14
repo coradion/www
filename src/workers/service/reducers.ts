@@ -19,7 +19,7 @@ const sanitizeUser = (user: User | null) => {
 export const getUser = ({ auth }: CoradionServiceWorkerState) =>
   sanitizeUser(auth.currentUser);
 
-export const createTask = async ({ firestore }, task) => {
+export const createTask = async ({ firestore }: CoradionServiceWorkerState, task: any) => {
   const tasksCollection = collection(firestore, "tasks");
   console.log("got task", task);
   return addDoc(tasksCollection, task).then(console.log).catch(console.error);

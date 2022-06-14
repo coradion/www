@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { FunctionComponent } from "react";
 import { CoradionLogo } from "../components/coradion-logo";
 import styled from "styled-components";

@@ -1,7 +1,7 @@
 import Document, { Html, Head, Main, NextScript } from "next/document";
 import { ServerStyleSheet } from "styled-components";
 import React from "react";
-import { AppType, Enhancer } from "next/dist/next-server/lib/utils";
+import {AppType, Enhancer} from "next/dist/shared/lib/utils";
 
 export default class extends Document {
   static getInitialProps: typeof Document.getInitialProps = async (context) => {

@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 // @ts-ignore
 const wbManifest = self.__WB_MANIFEST;
 

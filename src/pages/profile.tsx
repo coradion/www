@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import styled from "styled-components";
 import { IconButton } from "../components/icon-button";
 import { GoogleLogo } from "../components/google-logo";
