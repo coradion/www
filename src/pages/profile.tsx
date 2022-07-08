@@ -83,7 +83,7 @@ const reduceProviderDataToActiveProviders: ReduceProviderDataToActiveProviders =
 const initialActiveProviders = new Set();
 
 const ProfilePage = () => {
-  const {} = useServiceWorker();
+  const workbox = useServiceWorker();
   const { auth, user } = useAuth();
   const [activeProviders, setActiveProviders] = useState(
     initialActiveProviders

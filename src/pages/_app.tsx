@@ -12,10 +12,10 @@ import { withAuth } from "../contexts/auth";
 
 const App: FunctionComponent<AppProps> = ({ Component, pageProps }) => {
   useEffect(() => {
-    const myWorker = new Worker(
-      new URL("../workers/my.worker", import.meta.url)
-    );
-    myWorker.postMessage({ test: "test" });
+    // const myWorker = new Worker(
+    //   new URL("../workers/my.worker", import.meta.url)
+    // );
+    // myWorker.postMessage({ test: "test" });
   }, []);
   return (
     <Layout>

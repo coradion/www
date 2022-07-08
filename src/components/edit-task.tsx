@@ -76,13 +76,13 @@ const FormGroup = styled.div`
 
 export const EditTask = () => {
   const openShade = useShade();
-  const { dispatch } = useServiceWorker();
+  const workbox = useServiceWorker();
   const { handleSubmit, handleChange, values } = useFormik({
     initialValues: { title: "", description: "" },
     onSubmit: (payload) => {
       openShade(false);
-      if(dispatch === null) return;
-      dispatch({
+      if(workbox === null) return;
+      workbox.messageSW({
         type: "createTask",
         payload,
       });
