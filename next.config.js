@@ -28,7 +28,7 @@ module.exports = {
         }),
   headers: async () => [
     {
-      source: "/",
+      source: "/_next/static/chunks/service.worker.js",
       headers: [{
         key: "Service-Worker-Allowed",
         value: "/"

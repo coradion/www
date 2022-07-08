@@ -13,10 +13,7 @@ export const useCurrent = (channel: "Tasks") => {
       setState(data);
     }
 
-    setInterval(() => {
-      console.log("sending message to SW")
-      workbox.messageSW({ type: `get${channel}`, payload: undefined }).then(({ data }) => setState(data)).catch(console.error)
-    }, 5000)
+    workbox.messageSW({ type: `get${channel}`, payload: undefined }).then(setState).catch(console.error)
 
     return () => {
       broadcastChannel.close();
