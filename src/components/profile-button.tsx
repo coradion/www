@@ -1,9 +1,9 @@
-import { useServiceWorker } from "../contexts/service-worker";
+// import { useServiceWorker } from "../contexts/service-worker";
 import { IconButton } from "./icon-button";
 import Link from "next/link";
 
 export const ProfileButton = () => {
-  const { user } = useServiceWorker();
+  const user = null;
   return (
     <Link href="/profile">
       <IconButton>
@@ -11,7 +11,7 @@ export const ProfileButton = () => {
           "👤"
         ) : (
           <img
-            src={user.photoURL}
+            // src={user.photoURL}
             style={{ width: "3rem", height: "3rem", borderRadius: "1rem" }}
           />
         )}

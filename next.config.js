@@ -26,4 +26,13 @@ module.exports = {
             }),
           ],
         }),
+  headers: async () => [
+    {
+      source: "/",
+      headers: [{
+        key: "Service-Worker-Allowed",
+        value: "/"
+      }]
+    }
+  ]
 };

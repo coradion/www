@@ -1,5 +1,4 @@
 import {
-  ComponentType,
   createContext,
   useContext,
   useEffect,
@@ -14,6 +13,7 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 import { useFirebase } from "./firebase";
+import {WithAppProps} from "./shared.types";
 
 type AuthContextProps = { auth: Auth | null; user: User | null };
 
@@ -23,9 +23,7 @@ const AuthContext = createContext<AuthContextProps>(initialContext);
 
 export const useAuth = () => useContext(AuthContext);
 
-type WithAuth = <T>(Component: ComponentType<T>) => ComponentType<T>;
-
-export const withAuth: WithAuth = (Component) => (props) => {
+export const withAuth: WithAppProps = (Component) => (props) => {
   const firebaseApp = useFirebase();
   const [auth, setAuth] = useState<Auth | null>(null);
   const [user, setUser] = useState<User | null>(null);

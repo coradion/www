@@ -1,85 +1,95 @@
 import {
-  ComponentType,
   createContext,
   useContext,
   useEffect,
-  useReducer,
+  useState,
 } from "react";
-import { AppProps } from "next/app";
 import { Workbox } from "workbox-window";
 import { WorkboxMessageEvent } from "workbox-window/utils/WorkboxEvent";
+import {WithAppProps} from "./shared.types";
 
-type ServiceWorker = {
-  user: any;
-};
+type ServiceWorkerState = Workbox;
 
-const initialState = {
-  workbox: null,
-  user: null,
-};
+// const reducers = {
+//   setUser: (state: ServiceWorkerState, user: any) => {
+//     state.user = user;
+//     return state;
+//   },
+//   createTask: (state: ServiceWorkerState, payload: any) => {
+//     void state.workbox.messageSW({type: "createTask", payload});
+//     return state;
+//   },
+// } as const;
 
-const ServiceWorkerContext = createContext<ServiceWorker>(initialState);
+// type Reducers = typeof reducers;
+//
+// type ReducerKeys = keyof Reducers;
+
+// type DispatchParams = {
+//   [K in ReducerKeys]: {type: K, payload: Parameters<Reducers[K]>[1]}
+// }[ReducerKeys]
+
+const ServiceWorkerContext = createContext<ServiceWorkerState | null>(null);
 
 export const useServiceWorker = () => {
   const context = useContext(ServiceWorkerContext);
-  if (context === null)
-    throw new Error("`useServiceWorker` does not have a provider");
+  // if (context === null)
+  //   throw new Error("`useServiceWorker` does not have a provider");
   return context;
 };
 
-type WithPageProps = <T>(
-  Component: ComponentType<AppProps<T>>
-) => ComponentType<AppProps<T>>;
 
-const reducers = {
-  setUser: (state, user) => ({ ...state, user }),
-  createTask: ({ workbox }, payload) => {
-    if (workbox === null) throw new Error("workbox not defined");
-    return workbox.messageSW({ type: "createTask", payload });
-  },
-};
 
-/**
- * @todo The name of this needs to be improved
- */
-const selectReducer = (state, { type, payload }) => {
-  const { [type]: reducer = null } = reducers;
-  return reducer !== null ? reducer(state, payload) : undefined;
-};
+const onActivated = async () => {
+  console.log("activated")
+}
 
-const init = (state) =>
-  typeof window === "undefined"
-    ? state
-    : {
-        ...state,
-        workbox: new Workbox("/_next/static/chunks/service.worker.js"),
-      };
+const onWaiting = async () => {
+  console.log("waiting")
+}
 
-export const withServiceWorker: WithPageProps = (Component) => (props) => {
-  const [state, dispatch] = useReducer(selectReducer, initialState, init);
+export const withServiceWorker: WithAppProps = (Component) => (props) => {
+  const [workbox, setWorkbox] = useState<Workbox | null>(null);
   useEffect(() => {
-    if (state.workbox === null) return;
-    const eventReducer = ({ data, ...restOfData }: WorkboxMessageEvent) => {
-      console.log(restOfData);
-      if (data.type === "authStateChanged") {
-        dispatch({ type: "setUser", payload: data.payload });
-      }
+    if(workbox !== null) return;
+    const newWorkbox = new Workbox("/_next/static/chunks/service.worker.js", { scope: "/"});
+    const onMessage = ({ data }: WorkboxMessageEvent) => {
+      console.log("gotMessage", data);
     };
-    state.workbox.addEventListener("message", eventReducer);
-    state.workbox.register().then(async () => {
-      await state.workbox.update();
-      const newUser = await state.workbox.messageSW({ type: "getUser" });
-      dispatch({ type: "setUser", payload: newUser });
-    });
+
+    newWorkbox.addEventListener("message", onMessage);
+    newWorkbox.addEventListener("activated", onActivated);
+    const events = [
+      "activating", "controlling", "installed", "installing", "redundant", "waiting"
+    ] as const
+
+    events.forEach(event => {
+      newWorkbox.addEventListener(event, console.log)
+    })
+
+    newWorkbox.active.then(() => console.log("active promise"))
+    newWorkbox.controlling.then(() => console.log("controlling promise"))
+
+    newWorkbox.register().then(async (result) => {
+      await newWorkbox.update();
+      console.log("service worker registered", result)
+      setWorkbox(newWorkbox);
+    }).catch(console.error);
 
     return () => {
-      state.workbox.removeEventListener("message", eventReducer);
-      dispatch({ type: "setUser", payload: null });
+      newWorkbox.removeEventListener("message", onMessage);
+      newWorkbox.removeEventListener("activated", onActivated);
+      newWorkbox.removeEventListener("waiting", onWaiting);
+
+      events.forEach(event => {
+        newWorkbox.removeEventListener(event, console.log)
+      })
+
+      setWorkbox(null);
     };
   }, []);
-  const { user } = state;
   return (
-    <ServiceWorkerContext.Provider value={{ user, dispatch }}>
+    <ServiceWorkerContext.Provider value={workbox}>
       <Component {...props} />
     </ServiceWorkerContext.Provider>
   );

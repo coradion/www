@@ -1,5 +1,6 @@
-import { ComponentType, createContext, useContext } from "react";
+import { createContext, useContext } from "react";
 import { AppProps } from "next/app";
+import {WithAppProps} from "./shared.types";
 
 const PagePropsContext = createContext<AppProps | null>(null);
 
@@ -10,11 +11,7 @@ export const usePageProps = () => {
   return context;
 };
 
-type WithPageProps = <T>(
-  Component: ComponentType<AppProps<T>>
-) => ComponentType<AppProps<T>>;
-
-export const withPageProps: WithPageProps = (Component) => (props) =>
+export const withPageProps: WithAppProps = (Component) => (props) =>
   (
     <PagePropsContext.Provider value={props.pageProps}>
       <Component {...props} />

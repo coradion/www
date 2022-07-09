@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 // @ts-ignore
 const wbManifest = self.__WB_MANIFEST;
 
@@ -9,7 +11,7 @@ import {
   onAuthStateChanged,
   signInAnonymously,
 } from "firebase/auth";
-import { initializeFirestore } from "firebase/firestore";
+import {collection, initializeFirestore, onSnapshot, query, where} from "firebase/firestore";
 
 import { firebaseConfig } from "../../shared/firebase-config";
 import { CoradionServiceWorkerState } from "./types";
@@ -22,9 +24,9 @@ const state: CoradionServiceWorkerState = {
     persistence: indexedDBLocalPersistence,
   }),
   firestore: initializeFirestore(firebaseApp, {
-    useFetchStreams: true,
     experimentalAutoDetectLongPolling: true,
   }),
+  tasks: [],
 };
 
 try {
@@ -48,12 +50,20 @@ try {
         };
         matchedClients.forEach((client) => client.postMessage(message));
       });
+    const tasksCollection = collection(state.firestore, "tasks");
+    const tasksQuery = query(tasksCollection, where("creator.uid", "==", state.auth.currentUser.uid));
+    const tasksBroadcastChannel = new BroadcastChannel("Tasks")
+    const unsubscribe = onSnapshot(tasksQuery, (snapshot) => {
+      state.tasks = snapshot.docs.map(doc => doc.data());
+      tasksBroadcastChannel.postMessage(state.tasks);
+    })
   });
 
   workboxGoogleAnalytics();
 
   self.addEventListener("message", async (event) => {
     const { [event.data.type]: reducer = null } = reducers;
+    console.log("sw got message", event)
     if (reducer === null) return;
     const result = await reducer(state, event.data.payload);
     event.ports[0].postMessage(result);
@@ -61,3 +71,5 @@ try {
 } catch (e) {
   console.error(e);
 }
+
+setInterval(console.log, 5000, "i'm alive!")

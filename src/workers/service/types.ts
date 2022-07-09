@@ -1,7 +1,8 @@
 import { Auth } from "firebase/auth";
-import { FirebaseFirestore } from "firebase/firestore";
+import { Firestore } from "firebase/firestore";
 
 export type CoradionServiceWorkerState = {
   auth: Auth;
-  firestore: FirebaseFirestore;
+  firestore: Firestore;
+  tasks: any[];
 };

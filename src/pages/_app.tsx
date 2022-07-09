@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import {ElementType, FunctionComponent, useEffect} from "react";
 import { AppProps } from "next/app";
 import { Layout } from "../layout";
 import { withTheme } from "../layout/theme";
@@ -10,12 +10,12 @@ import { withServiceWorker } from "../contexts/service-worker";
 import { withFirebase } from "../contexts/firebase";
 import { withAuth } from "../contexts/auth";
 
-const App = ({ Component, pageProps }: AppProps) => {
+const App: FunctionComponent<AppProps> = ({ Component, pageProps }) => {
   useEffect(() => {
-    const myWorker = new Worker(
-      new URL("../workers/my.worker", import.meta.url)
-    );
-    myWorker.postMessage({ test: "test" });
+    // const myWorker = new Worker(
+    //   new URL("../workers/my.worker", import.meta.url)
+    // );
+    // myWorker.postMessage({ test: "test" });
   }, []);
   return (
     <Layout>
@@ -31,4 +31,4 @@ export default [
   withAuth,
   withServiceWorker,
   withShade,
-].reduceRight((Component, withHoc) => withHoc(Component), App);
+].reduceRight<ElementType<AppProps>>((Component, withHoc) => withHoc(Component), App);

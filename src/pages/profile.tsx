@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import styled from "styled-components";
 import { IconButton } from "../components/icon-button";
 import { GoogleLogo } from "../components/google-logo";
@@ -84,7 +86,7 @@ const reduceProviderDataToActiveProviders: ReduceProviderDataToActiveProviders =
 const initialActiveProviders = new Set();
 
 const ProfilePage = () => {
-  const {} = useServiceWorker();
+  const workbox = useServiceWorker();
   const { auth, user } = useAuth();
   const [activeProviders, setActiveProviders] = useState(
     initialActiveProviders

@@ -3,6 +3,7 @@ import { position, transparentize } from "polished";
 import { useShade } from "../contexts/shade";
 import { useServiceWorker } from "../contexts/service-worker";
 import { useFormik } from "formik";
+import { MouseEventHandler} from "react";
 
 const Card = styled.form`
   ${(p) => p.theme.css.glass}
@@ -75,19 +76,20 @@ const FormGroup = styled.div`
 
 export const EditTask = () => {
   const openShade = useShade();
-  const { dispatch } = useServiceWorker();
+  const workbox = useServiceWorker();
   const { handleSubmit, handleChange, values } = useFormik({
     initialValues: { title: "", description: "" },
     onSubmit: (payload) => {
       openShade(false);
-      dispatch({
+      if(workbox === null) return;
+      workbox.messageSW({
         type: "createTask",
         payload,
       });
     },
   });
 
-  const handleClose = (e) => {
+  const handleClose: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.preventDefault();
     openShade(false);
   };

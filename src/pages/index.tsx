@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { FunctionComponent } from "react";
 import { CoradionLogo } from "../components/coradion-logo";
 import styled from "styled-components";
@@ -6,6 +8,7 @@ import { IconButton } from "../components/icon-button";
 import { List } from "../components/cards";
 import { ProfileButton } from "../components/profile-button";
 import { useShade } from "../contexts/shade";
+import {useCurrent} from "../hooks/useCurrent";
 
 const StackedColorSquare = styled.div`
   width: 61.8vmin;
@@ -66,12 +69,14 @@ const Card = styled.p`
 `;
 
 const IndexPage: FunctionComponent = () => {
+  const tasks = useCurrent("Tasks");
   return (
     <>
       <Head>
         <title>Coradion</title>
       </Head>
       <Main />
+      <pre>{JSON.stringify(tasks, null, 2)}</pre>
     </>
   );
 };

@@ -4,11 +4,11 @@ import {
   SetStateAction,
   useContext,
   useState,
-  ComponentType,
 } from "react";
 import styled from "styled-components";
 import { position } from "polished";
 import { EditTask } from "../components/edit-task";
+import {WithAppProps} from "./shared.types";
 
 type ShadeContext = Dispatch<SetStateAction<boolean>> | null;
 
@@ -41,9 +41,7 @@ const Shade = styled.div<ShadeProps>`
 
 Shade.displayName = "Shade";
 
-type WithShadeContext = <T>(Component: ComponentType<T>) => ComponentType<T>;
-
-export const withShade: WithShadeContext = (Component) => (props) => {
+export const withShade: WithAppProps = (Component) => (props) => {
   const [open, setOpen] = useState(false);
   return (
     <Provider value={setOpen}>
