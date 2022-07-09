@@ -1,5 +1,5 @@
 {
-  "name": "with-typescript",
+  "name": "@coradion/www",
   "version": "1.0.0",
   "scripts": {
     "dev": "next dev",
