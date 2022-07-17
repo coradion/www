@@ -71,5 +71,3 @@ try {
 } catch (e) {
   console.error(e);
 }
-
-setInterval(console.log, 5000, "i'm alive!")
