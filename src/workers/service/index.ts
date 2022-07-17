@@ -41,15 +41,8 @@ try {
     });
   onAuthStateChanged(state.auth, () => {
     if (state.auth.currentUser === null) return signInAnonymously(state.auth);
-    self.clients
-      .matchAll({ includeUncontrolled: true, type: "window" })
-      .then((matchedClients) => {
-        const message = {
-          type: "authStateChanged",
-          payload: reducers.getUser(state),
-        };
-        matchedClients.forEach((client) => client.postMessage(message));
-      });
+    const userBroadcastChannel = new BroadcastChannel("User");
+    userBroadcastChannel.postMessage(reducers.getUser(state));
     const tasksCollection = collection(state.firestore, "tasks");
     const tasksQuery = query(tasksCollection, where("creator.uid", "==", state.auth.currentUser.uid));
     const tasksBroadcastChannel = new BroadcastChannel("Tasks")

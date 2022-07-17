@@ -19,7 +19,9 @@ import { useFirebase } from "../contexts/firebase";
 import { useEffect, useState } from "react";
 import { useAuth } from "../contexts/auth";
 
-const ProfilePhoto = styled.img`
+const ProfilePhoto = styled.img.attrs({
+  referrerPolicy: "no-referrer",
+})`
   height: 10rem;
   width: 10rem;
   border-radius: 5rem;
@@ -111,6 +113,7 @@ const ProfilePage = () => {
     if (auth === null) return;
     signOut(auth);
   };
+
   return (
     <>
       <Pane>

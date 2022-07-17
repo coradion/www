@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import {useServiceWorker} from "../contexts/service-worker";
 
-export const useCurrent = (channel: "Tasks") => {
+export const useCurrent = (channel: "Tasks" | "User") => {
   const workbox = useServiceWorker();
   const [state, setState] = useState(null);
 
