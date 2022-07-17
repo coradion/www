@@ -8,6 +8,7 @@
     "type-check": "tsc"
   },
   "dependencies": {
+    "@coradion/ui": "^1.2.0",
     "@fontsource/public-sans": "^4.5.9",
     "@iconscout/react-unicons-monochrome": "0.0.5",
     "dotenv": "^16.0.1",
