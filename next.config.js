@@ -1,9 +1,8 @@
-const { merge } = require("webpack-merge");
-const { InjectManifest } = require("workbox-webpack-plugin");
-const { resolve } = require("path");
+import { resolve } from "node:path";
+import { InjectManifest } from "workbox-webpack-plugin";
+import { merge } from "webpack-merge";
 
-module.exports = {
-  reactStrictMode: true,
+export default {
   webpack: (config, { isServer, dir }) =>
     isServer
       ? config
@@ -29,10 +28,12 @@ module.exports = {
   headers: async () => [
     {
       source: "/_next/static/chunks/service.worker.js",
-      headers: [{
-        key: "Service-Worker-Allowed",
-        value: "/"
-      }]
-    }
-  ]
+      headers: [
+        {
+          key: "Service-Worker-Allowed",
+          value: "/",
+        },
+      ],
+    },
+  ],
 };
