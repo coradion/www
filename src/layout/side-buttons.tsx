@@ -23,12 +23,14 @@ export const SideButtons = () => {
   return (
     <Aside>
       <Link href="/">
-        <IconButton>
+        <IconButton size="large" label="">
           <CoradionLogo />
         </IconButton>
       </Link>
       <ProfileButton />
-      <IconButton onClick={() => openTaskEditor()}>➕</IconButton>
+      <IconButton size="large" label="" onClick={() => openTaskEditor()}>
+        ➕
+      </IconButton>
     </Aside>
   );
 };

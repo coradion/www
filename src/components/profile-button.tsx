@@ -1,15 +1,15 @@
 // import { useServiceWorker } from "../contexts/service-worker";
 import { IconButton } from "./icon-button";
 import Link from "next/link";
-import {useCurrent} from "../hooks/useCurrent";
+import { useCurrent } from "../hooks/useCurrent";
 
 export const ProfileButton = () => {
   const user = useCurrent("User");
-  console.log( {user} )
+  console.log({ user });
 
   return (
     <Link href="/profile">
-      <IconButton>
+      <IconButton size="large" label="">
         {user === null || typeof user === "undefined" ? (
           "👤"
         ) : (
