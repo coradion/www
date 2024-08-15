@@ -1,6 +1,6 @@
-import {AppProps} from "next/app";
-import {ElementType} from "react";
+import { AppProps } from "next/app";
+import { ComponentType, ElementType } from "react";
 
 export type WithAppProps = <T>(
   Component: ElementType<AppProps<T>>
-) => ElementType<AppProps<T>>;
+) => ComponentType<AppProps<T>>;
