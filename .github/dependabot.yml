@@ -1,0 +1,21 @@
+version: 2
+
+updates:
+    - package-ecosystem: npm
+      directory: /
+      schedule:
+          interval: weekly
+      commit-message:
+          prefix: chore
+          include: scope
+      ignore:
+          - dependency-name: "@types/node"
+            update-types: ["version-update:semver-major"] # major version should only be incremented when we change Node versions
+      groups:
+          non-major-revisions:
+              update-types:
+                  - minor
+                  - patch
+          major-revisions:
+              update-types:
+                  - major
