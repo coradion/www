@@ -1,11 +1,11 @@
-import { VoidFunctionComponent } from "react";
+import { FunctionComponent } from "react";
 
 type ListItemProps = {
   id: string;
   label: string;
 };
 
-const ListItem: VoidFunctionComponent<ListItemProps> = ({ label }) => (
+const ListItem: FunctionComponent<ListItemProps> = ({ label }) => (
   <li>{label}</li>
 );
 
@@ -17,7 +17,7 @@ type ListProps = {
   items: ListItemProps[];
 };
 
-export const List: VoidFunctionComponent<ListProps> = ({ label, items }) => {
+export const List: FunctionComponent<ListProps> = ({ label, items }) => {
   return (
     <>
       {label}

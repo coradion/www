@@ -1,6 +1,10 @@
+"use client";
+
 import {
   createContext,
   Dispatch,
+  FunctionComponent,
+  PropsWithChildren,
   SetStateAction,
   useContext,
   useState,
@@ -8,24 +12,21 @@ import {
 import styled from "styled-components";
 import { position } from "polished";
 import { EditTask } from "../components/edit-task";
-import {WithAppProps} from "./shared.types";
 
 type ShadeContext = Dispatch<SetStateAction<boolean>> | null;
 
-const shadeContext = createContext<ShadeContext>(null);
+const ShadeContext = createContext<ShadeContext>(null);
 
 export const useShade = () => {
-  const context = useContext(shadeContext);
+  const context = useContext(ShadeContext);
 
   if (context === null)
     throw new Error(
-      "`useShadeContext` was null, wrap any component above with `withShadeContext`"
+      "`useShadeContext` was null, wrap any component above with `withShadeContext`",
     );
 
   return context;
 };
-
-const { Provider } = shadeContext;
 
 type ShadeProps = { open: boolean };
 
@@ -41,14 +42,16 @@ const Shade = styled.div<ShadeProps>`
 
 Shade.displayName = "Shade";
 
-export const withShade: WithAppProps = (Component) => (props) => {
+export const ShadeContextProvider: FunctionComponent<PropsWithChildren> = ({
+  children,
+}) => {
   const [open, setOpen] = useState(false);
   return (
-    <Provider value={setOpen}>
+    <ShadeContext.Provider value={setOpen}>
       <Shade open={open}>
         <EditTask />
       </Shade>
-      <Component {...props} />
-    </Provider>
+      {children}
+    </ShadeContext.Provider>
   );
 };

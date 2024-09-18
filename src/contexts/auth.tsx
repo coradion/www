@@ -1,19 +1,22 @@
+"use client";
+
 import {
   createContext,
+  FunctionComponent,
+  PropsWithChildren,
   useContext,
   useEffect,
   useState,
 } from "react";
 import {
   Auth,
-  User,
   browserPopupRedirectResolver,
   indexedDBLocalPersistence,
   initializeAuth,
   onAuthStateChanged,
+  User,
 } from "firebase/auth";
 import { useFirebase } from "./firebase";
-import {WithAppProps} from "./shared.types";
 
 type AuthContextProps = { auth: Auth | null; user: User | null };
 
@@ -23,7 +26,9 @@ const AuthContext = createContext<AuthContextProps>(initialContext);
 
 export const useAuth = () => useContext(AuthContext);
 
-export const withAuth: WithAppProps = (Component) => (props) => {
+export const AuthContextProvider: FunctionComponent<PropsWithChildren> = ({
+  children,
+}) => {
   const firebaseApp = useFirebase();
   const [auth, setAuth] = useState<Auth | null>(null);
   const [user, setUser] = useState<User | null>(null);
@@ -38,10 +43,10 @@ export const withAuth: WithAppProps = (Component) => (props) => {
     return () => {
       unsubscribe();
     };
-  }, [firebaseApp]);
+  }, [auth, firebaseApp]);
   return (
     <AuthContext.Provider value={{ auth, user }}>
-      <Component {...props} />
+      {children}
     </AuthContext.Provider>
   );
 };

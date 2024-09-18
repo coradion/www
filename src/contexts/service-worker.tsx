@@ -1,12 +1,15 @@
+"use client";
+
 import {
   createContext,
+  FunctionComponent,
+  PropsWithChildren,
   useContext,
   useEffect,
   useState,
 } from "react";
 import { Workbox } from "workbox-window";
 import { WorkboxMessageEvent } from "workbox-window/utils/WorkboxEvent";
-import {WithAppProps} from "./shared.types";
 
 type ServiceWorkerState = Workbox;
 
@@ -38,21 +41,23 @@ export const useServiceWorker = () => {
   return context;
 };
 
-
-
 const onActivated = async () => {
-  console.log("activated")
-}
+  console.log("activated");
+};
 
 const onWaiting = async () => {
-  console.log("waiting")
-}
+  console.log("waiting");
+};
 
-export const withServiceWorker: WithAppProps = (Component) => (props) => {
+export const ServiceWorkerProvider: FunctionComponent<PropsWithChildren> = ({
+  children,
+}) => {
   const [workbox, setWorkbox] = useState<Workbox | null>(null);
   useEffect(() => {
-    if(workbox !== null) return;
-    const newWorkbox = new Workbox("/_next/static/chunks/service.worker.js", { scope: "/"});
+    if (workbox !== null) return;
+    const newWorkbox = new Workbox("/_next/static/chunks/service.worker.js", {
+      scope: "/",
+    });
     const onMessage = ({ data }: WorkboxMessageEvent) => {
       console.log("gotMessage", data);
     };
@@ -60,37 +65,45 @@ export const withServiceWorker: WithAppProps = (Component) => (props) => {
     newWorkbox.addEventListener("message", onMessage);
     newWorkbox.addEventListener("activated", onActivated);
     const events = [
-      "activating", "controlling", "installed", "installing", "redundant", "waiting"
-    ] as const
+      "activating",
+      "controlling",
+      "installed",
+      "installing",
+      "redundant",
+      "waiting",
+    ] as const;
 
-    events.forEach(event => {
-      newWorkbox.addEventListener(event, console.log)
-    })
+    events.forEach((event) => {
+      newWorkbox.addEventListener(event, console.log);
+    });
 
-    newWorkbox.active.then(() => console.log("active promise"))
-    newWorkbox.controlling.then(() => console.log("controlling promise"))
+    newWorkbox.active.then(() => console.log("active promise"));
+    newWorkbox.controlling.then(() => console.log("controlling promise"));
 
-    newWorkbox.register().then(async (result) => {
-      await newWorkbox.update();
-      console.log("service worker registered", result)
-      setWorkbox(newWorkbox);
-    }).catch(console.error);
+    newWorkbox
+      .register()
+      .then(async (result) => {
+        await newWorkbox.update();
+        console.log("service worker registered", result);
+        setWorkbox(newWorkbox);
+      })
+      .catch(console.error);
 
     return () => {
       newWorkbox.removeEventListener("message", onMessage);
       newWorkbox.removeEventListener("activated", onActivated);
       newWorkbox.removeEventListener("waiting", onWaiting);
 
-      events.forEach(event => {
-        newWorkbox.removeEventListener(event, console.log)
-      })
+      events.forEach((event) => {
+        newWorkbox.removeEventListener(event, console.log);
+      });
 
       setWorkbox(null);
     };
-  }, []);
+  }, [workbox]);
   return (
     <ServiceWorkerContext.Provider value={workbox}>
-      <Component {...props} />
+      {children}
     </ServiceWorkerContext.Provider>
   );
 };

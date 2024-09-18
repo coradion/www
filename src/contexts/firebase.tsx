@@ -1,20 +1,25 @@
+"use client";
+
 import {
   createContext,
+  FunctionComponent,
+  PropsWithChildren,
   useContext,
   useEffect,
   useState,
 } from "react";
 import { firebaseConfig } from "../shared/firebase-config";
-import { initializeApp, deleteApp, FirebaseApp } from "firebase/app";
+import { deleteApp, FirebaseApp, initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import {WithAppProps} from "./shared.types";
 //import { addDoc, collection, initializeFirestore } from "firebase/firestore";
 
 const FirebaseContext = createContext<FirebaseApp | null>(null);
 
 export const useFirebase = () => useContext(FirebaseContext);
 
-export const withFirebase: WithAppProps = (Component) => (props) => {
+export const FirebaseContextProvider: FunctionComponent<PropsWithChildren> = ({
+  children,
+}) => {
   const [firebaseApp, setFirebaseApp] = useState<FirebaseApp | null>(null);
   useEffect(() => {
     const newFirebaseApp = initializeApp(firebaseConfig);
@@ -32,15 +37,15 @@ export const withFirebase: WithAppProps = (Component) => (props) => {
     */
     setFirebaseApp(newFirebaseApp);
     return () => {
-      if(firebaseApp === null) return;
+      if (firebaseApp === null) return;
       deleteApp(newFirebaseApp);
       setFirebaseApp(null);
     };
-  }, []);
+  }, [firebaseApp]);
 
   return (
     <FirebaseContext.Provider value={firebaseApp}>
-      <Component {...props} />
+      {children}
     </FirebaseContext.Provider>
   );
 };

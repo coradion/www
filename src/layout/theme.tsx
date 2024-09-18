@@ -1,7 +1,7 @@
 import "@fontsource/public-sans";
 import { createGlobalStyle, css, ThemeProvider } from "styled-components";
 import { darken, setLightness, transparentize } from "polished";
-import {WithAppProps} from "../contexts/shared.types";
+import { FunctionComponent, PropsWithChildren } from "react";
 
 const theme = {
   colors: {
@@ -55,12 +55,11 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-export const withTheme: WithAppProps = (App) => (props) =>
-  (
-    <>
-      <GlobalStyle />
-      <ThemeProvider theme={theme}>
-        <App {...props} />
-      </ThemeProvider>
-    </>
-  );
+export const ThemeContextProvider: FunctionComponent<PropsWithChildren> = ({
+  children,
+}) => (
+  <>
+    <GlobalStyle />
+    <ThemeProvider theme={theme}>{children}</ThemeProvider>
+  </>
+);

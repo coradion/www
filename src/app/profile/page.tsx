@@ -1,23 +1,16 @@
-// @ts-nocheck
+"use client";
 
 import styled from "styled-components";
-import { IconButton } from "../components/icon-button";
-import { GoogleLogo } from "../components/google-logo";
 import {
   GoogleAuthProvider,
   signInWithPopup,
-  FacebookAuthProvider,
-  GithubAuthProvider,
-  TwitterAuthProvider,
   AuthProvider,
   UserInfo,
   signOut,
 } from "firebase/auth";
-import { useServiceWorker } from "../contexts/service-worker";
-import { Auth, initializeAuth, ProviderId } from "firebase/auth";
-import { useFirebase } from "../contexts/firebase";
+import { ProviderId } from "firebase/auth";
 import { useEffect, useState } from "react";
-import { useAuth } from "../contexts/auth";
+import { useAuth } from "../../contexts/auth";
 
 const ProfilePhoto = styled.img.attrs({
   referrerPolicy: "no-referrer",
@@ -42,22 +35,13 @@ const Pane = styled.div`
   padding: 1rem;
 `;
 
-const LoginContainer = styled.div`
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: center;
-  align-items: center;
-  flex: 1;
-`;
-
 const Name = styled.h3``;
 
-type ProviderIds = typeof ProviderId[keyof typeof ProviderId];
+type ProviderIds = (typeof ProviderId)[keyof typeof ProviderId];
 
-const authProviders: Record<
-  ProviderIds,
-  { name: string; getProvider: () => AuthProvider }
-> = {
+const authProviders: {
+  [ProviderId.GOOGLE]: { name: string; getProvider: () => GoogleAuthProvider };
+} = {
   [ProviderId.GOOGLE]: {
     name: "Google",
     getProvider: () => new GoogleAuthProvider(),
@@ -78,7 +62,7 @@ const authProviders: Record<
 
 type ReduceProviderDataToActiveProviders = (
   activeProviders: Set<ProviderIds>,
-  userInfo: UserInfo
+  userInfo: UserInfo,
 ) => Set<ProviderIds>;
 
 const reduceProviderDataToActiveProviders: ReduceProviderDataToActiveProviders =
@@ -88,10 +72,10 @@ const reduceProviderDataToActiveProviders: ReduceProviderDataToActiveProviders =
 const initialActiveProviders = new Set();
 
 const ProfilePage = () => {
-  const workbox = useServiceWorker();
+  //const workbox = useServiceWorker();
   const { auth, user } = useAuth();
   const [activeProviders, setActiveProviders] = useState(
-    initialActiveProviders
+    initialActiveProviders,
   );
   useEffect(() => {
     if (user === null) {
@@ -101,7 +85,7 @@ const ProfilePage = () => {
     const { providerData } = user;
     const newActiveProviders = providerData.reduce(
       reduceProviderDataToActiveProviders,
-      new Set()
+      new Set(),
     );
     setActiveProviders(newActiveProviders);
   }, [user]);
