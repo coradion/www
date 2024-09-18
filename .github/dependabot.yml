@@ -11,6 +11,8 @@ updates:
       ignore:
           - dependency-name: "@types/node"
             update-types: ["version-update:semver-major"] # major version should only be incremented when we change Node versions
+          - dependency-name: "eslint"
+            update-types: ["version-update:semver-major"] # eslint major version is tied to `eslint-config-next`
       groups:
           non-major-revisions:
               update-types:
