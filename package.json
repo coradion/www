@@ -15,7 +15,7 @@
     "@fontsource/public-sans": "^5.1.1",
     "@iconscout/react-unicons-monochrome": "^1.0.2",
     "dotenv": "^16.0.1",
-    "firebase": "^11.0.1",
+    "firebase": "^11.0.2",
     "formik": "^2.2.9",
     "next": "^15.0.3",
     "polished": "^4.0.5",
@@ -44,7 +44,7 @@
     "jsdom": "^25.0.1",
     "prettier": "^3.3.3",
     "typescript": "^5.6.3",
-    "vitest": "^2.1.4"
+    "vitest": "^2.1.5"
   },
   "license": "AGPL-3.0-or-later"
 }
