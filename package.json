@@ -33,7 +33,7 @@
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.2.0",
     "@tsconfig/next": "^2.0.3",
-    "@types/node": "^22.13.4",
+    "@types/node": "^22.13.5",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@types/styled-components": "^5.1.25",
@@ -42,9 +42,9 @@
     "eslint": "^8.57.1",
     "eslint-config-next": "^15.1.7",
     "jsdom": "^26.0.0",
-    "prettier": "^3.5.1",
+    "prettier": "^3.5.2",
     "typescript": "^5.7.3",
-    "vitest": "^3.0.5"
+    "vitest": "^3.0.6"
   },
   "license": "AGPL-3.0-or-later"
 }
