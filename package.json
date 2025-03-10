@@ -11,13 +11,13 @@
     "type-check": "tsc"
   },
   "dependencies": {
-    "@coradion/ui": "^1.4.0",
+    "@coradion/ui": "^1.5.0",
     "@fontsource/public-sans": "^5.2.5",
     "@iconscout/react-unicons-monochrome": "^1.2.0",
     "dotenv": "^16.4.7",
     "firebase": "^11.4.0",
     "formik": "^2.2.9",
-    "next": "^15.2.0",
+    "next": "^15.2.1",
     "polished": "^4.0.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -33,18 +33,18 @@
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.2.0",
     "@tsconfig/next": "^2.0.3",
-    "@types/node": "^22.13.8",
+    "@types/node": "^22.13.10",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@types/styled-components": "^5.1.25",
     "@types/workbox-webpack-plugin": "^6.0.0",
     "@vitejs/plugin-react": "^4.3.4",
     "eslint": "^8.57.1",
-    "eslint-config-next": "^15.2.0",
+    "eslint-config-next": "^15.2.1",
     "jsdom": "^26.0.0",
     "prettier": "^3.5.3",
     "typescript": "^5.8.2",
-    "vitest": "^3.0.7"
+    "vitest": "^3.0.8"
   },
   "license": "AGPL-3.0-or-later"
 }
