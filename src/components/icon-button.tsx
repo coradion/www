@@ -1,7 +1,6 @@
 import styled from "styled-components";
-import { Button } from "@coradion/ui";
 
-export const IconButton = styled(Button)`
+export const IconButton = styled.button`
   ${(p) => p.theme.css.glass};
   cursor: pointer;
   padding: 0.5rem;

@@ -1,3 +1,5 @@
+"use client";
+
 import "@fontsource/public-sans";
 import { createGlobalStyle, css, ThemeProvider } from "styled-components";
 import { darken, setLightness, transparentize } from "polished";
