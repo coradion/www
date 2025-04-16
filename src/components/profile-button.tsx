@@ -1,5 +1,3 @@
-// import { useServiceWorker } from "../contexts/service-worker";
-import { IconButton } from "./icon-button";
 import Link from "next/link";
 import { useCurrent } from "../hooks/useCurrent";
 
@@ -9,7 +7,7 @@ export const ProfileButton = () => {
 
   return (
     <Link href="/profile">
-      <IconButton size="large" label="">
+      <button className="btn">
         {user === null || typeof user === "undefined" ? (
           "👤"
         ) : (
@@ -20,7 +18,7 @@ export const ProfileButton = () => {
             referrerPolicy="no-referrer"
           />
         )}
-      </IconButton>
+      </button>
     </Link>
   );
 };

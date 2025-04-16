@@ -25,5 +25,6 @@ export const useCurrent = (channel: "Tasks" | "User") => {
       setState(null);
     };
   }, [workbox]);
+
   return state;
 };

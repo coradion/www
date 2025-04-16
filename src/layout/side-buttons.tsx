@@ -1,4 +1,3 @@
-import { IconButton } from "../components/icon-button";
 import { CoradionLogo } from "../components/coradion-logo";
 import { ProfileButton } from "../components/profile-button";
 import styled from "styled-components";
@@ -23,14 +22,14 @@ export const SideButtons = () => {
   return (
     <Aside>
       <Link href="/">
-        <IconButton size="large" label="">
+        <button className="btn">
           <CoradionLogo />
-        </IconButton>
+        </button>
       </Link>
       <ProfileButton />
-      <IconButton size="large" label="" onClick={() => openTaskEditor()}>
+      <button className="btn" onClick={() => openTaskEditor()}>
         ➕
-      </IconButton>
+      </button>
     </Aside>
   );
 };
