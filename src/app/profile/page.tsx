@@ -1,41 +1,15 @@
 "use client";
 
-import styled from "styled-components";
 import {
-  GoogleAuthProvider,
-  signInWithPopup,
   AuthProvider,
-  UserInfo,
+  GoogleAuthProvider,
+  ProviderId,
+  signInWithPopup,
   signOut,
+  UserInfo,
 } from "firebase/auth";
-import { ProviderId } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/auth";
-
-const ProfilePhoto = styled.img.attrs({
-  referrerPolicy: "no-referrer",
-})`
-  height: 10rem;
-  width: 10rem;
-  border-radius: 5rem;
-  ::before {
-    content: "👤";
-    font-size: 5rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    user-select: none;
-  }
-`;
-
-const Pane = styled.div`
-  ${(p) => p.theme.css.glass};
-  )flex: 1;
-  margin: 1rem;
-  padding: 1rem;
-`;
-
-const Name = styled.h3``;
 
 type ProviderIds = (typeof ProviderId)[keyof typeof ProviderId];
 
@@ -100,9 +74,11 @@ const ProfilePage = () => {
 
   return (
     <>
-      <Pane>
-        <ProfilePhoto src={user?.photoURL ?? ""} />
-        <Name>{user?.displayName ?? "Anonymous"}</Name>
+      <div>
+        <div className="avatar w-24 rounded">
+          {user?.photoURL && <img src={user?.photoURL} />}
+        </div>
+        <div>{user?.displayName ?? "Anonymous"}</div>
         <h4>Connected Accounts</h4>
         {Object.entries(authProviders).map(([key, { name, getProvider }]) => (
           <button
@@ -114,7 +90,7 @@ const ProfilePage = () => {
           </button>
         ))}
         <button onClick={() => handleSignOut()}>Sign Out</button>
-      </Pane>
+      </div>
     </>
   );
 };

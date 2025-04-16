@@ -6,7 +6,6 @@ import { FunctionComponent, PropsWithChildren } from "react";
 import { Layout } from "../layout";
 import { AuthContextProvider } from "../contexts/auth";
 import { FirebaseContextProvider } from "../contexts/firebase";
-import { ThemeContextProvider } from "../layout/theme";
 import { ShadeContextProvider } from "../contexts/shade";
 import { ServiceWorkerProvider } from "../contexts/service-worker";
 
@@ -20,17 +19,15 @@ const App: FunctionComponent<PropsWithChildren> = ({ children }) => {
   return (
     <html lang="en">
       <body>
-        <ThemeContextProvider>
-          <FirebaseContextProvider>
-            <AuthContextProvider>
-              <ServiceWorkerProvider>
-                <ShadeContextProvider>
-                  <Layout>{children}</Layout>
-                </ShadeContextProvider>
-              </ServiceWorkerProvider>
-            </AuthContextProvider>
-          </FirebaseContextProvider>
-        </ThemeContextProvider>
+        <FirebaseContextProvider>
+          <AuthContextProvider>
+            <ServiceWorkerProvider>
+              <ShadeContextProvider>
+                <Layout>{children}</Layout>
+              </ShadeContextProvider>
+            </ServiceWorkerProvider>
+          </AuthContextProvider>
+        </FirebaseContextProvider>
       </body>
     </html>
   );

@@ -11,7 +11,6 @@ import {
 import { firebaseConfig } from "../shared/firebase-config";
 import { deleteApp, FirebaseApp, initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-//import { addDoc, collection, initializeFirestore } from "firebase/firestore";
 
 const FirebaseContext = createContext<FirebaseApp | null>(null);
 
@@ -25,16 +24,6 @@ export const FirebaseContextProvider: FunctionComponent<PropsWithChildren> = ({
     const newFirebaseApp = initializeApp(firebaseConfig);
 
     getAnalytics(newFirebaseApp);
-    /*
-    const firestore = initializeFirestore(newFirebaseApp, {
-      useFetchStreams: true,
-      experimentalAutoDetectLongPolling: true,
-    });
-    const tasksCollection = collection(firestore, "tasks");
-    addDoc(tasksCollection, { title: "test", description: "test" })
-      .then(console.log)
-      .catch(console.error);
-    */
     setFirebaseApp(newFirebaseApp);
     return () => {
       if (firebaseApp === null) return;
