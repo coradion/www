@@ -1,12 +1,12 @@
 "use client";
 
+import type { AppProps } from "next/app";
 import {
+  type FunctionComponent,
+  type PropsWithChildren,
   createContext,
-  FunctionComponent,
-  PropsWithChildren,
   useContext,
 } from "react";
-import { AppProps } from "next/app";
 
 const PagePropsContext = createContext<AppProps | null>(null);
 

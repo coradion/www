@@ -1,7 +1,7 @@
+import Link from "next/link";
 import { CoradionLogo } from "../components/coradion-logo";
 import { ProfileButton } from "../components/profile-button";
 import { useShade } from "../contexts/shade";
-import Link from "next/link";
 
 export const SideButtons = () => {
   const openShade = useShade();

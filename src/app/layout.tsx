@@ -2,12 +2,12 @@
 import "./globals.css";
 import "../../public/fonts/fonts.css";
 
-import { FunctionComponent, PropsWithChildren } from "react";
-import { Layout } from "../layout";
+import type { FunctionComponent, PropsWithChildren } from "react";
 import { AuthContextProvider } from "../contexts/auth";
 import { FirebaseContextProvider } from "../contexts/firebase";
-import { ShadeContextProvider } from "../contexts/shade";
 import { ServiceWorkerProvider } from "../contexts/service-worker";
+import { ShadeContextProvider } from "../contexts/shade";
+import { Layout } from "../layout";
 
 const App: FunctionComponent<PropsWithChildren> = ({ children }) => {
   // useEffect(() => {

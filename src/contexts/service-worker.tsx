@@ -1,15 +1,15 @@
 "use client";
 
 import {
+  type FunctionComponent,
+  type PropsWithChildren,
   createContext,
-  FunctionComponent,
-  PropsWithChildren,
   useContext,
   useEffect,
   useState,
 } from "react";
 import { Workbox } from "workbox-window";
-import { WorkboxMessageEvent } from "workbox-window/utils/WorkboxEvent";
+import type { WorkboxMessageEvent } from "workbox-window/utils/WorkboxEvent";
 
 type ServiceWorkerState = Workbox;
 

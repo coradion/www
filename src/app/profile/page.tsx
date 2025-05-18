@@ -1,12 +1,12 @@
 "use client";
 
 import {
-  AuthProvider,
+  type AuthProvider,
   GoogleAuthProvider,
   ProviderId,
+  type UserInfo,
   signInWithPopup,
   signOut,
-  UserInfo,
 } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/auth";

@@ -1,6 +1,6 @@
 import { resolve } from "node:path";
-import { InjectManifest } from "workbox-webpack-plugin";
 import { merge } from "webpack-merge";
+import { InjectManifest } from "workbox-webpack-plugin";
 
 export default {
   webpack: (config, { isServer, dir }) =>
@@ -10,7 +10,7 @@ export default {
           output: {
             hotUpdateMainFilename: config.output.hotUpdateMainFilename.replace(
               "[fullhash].hot-update.json",
-              "[runtime].[fullhash].hot-update.json"
+              "[runtime].[fullhash].hot-update.json",
             ),
           },
           plugins: [
@@ -20,7 +20,7 @@ export default {
                 config.output.path,
                 "static",
                 "chunks",
-                "service.worker.js"
+                "service.worker.js",
               ),
             }),
           ],
