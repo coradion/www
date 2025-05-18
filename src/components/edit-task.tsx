@@ -1,7 +1,7 @@
-import { useShade } from "../contexts/shade";
-import { useServiceWorker } from "../contexts/service-worker";
 import { useFormik } from "formik";
-import { MouseEventHandler } from "react";
+import type { MouseEventHandler } from "react";
+import { useServiceWorker } from "../contexts/service-worker";
+import { useShade } from "../contexts/shade";
 
 export const EditTask = () => {
   const openShade = useShade();

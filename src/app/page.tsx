@@ -1,7 +1,7 @@
 "use client";
 
-import { FunctionComponent } from "react";
 import Head from "next/head";
+import type { FunctionComponent } from "react";
 import { useCurrent } from "../hooks/useCurrent";
 
 const IndexPage: FunctionComponent = () => {

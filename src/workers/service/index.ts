@@ -3,7 +3,6 @@
 // @ts-ignore
 const wbManifest = self.__WB_MANIFEST;
 
-import { initialize as workboxGoogleAnalytics } from "workbox-google-analytics";
 import { initializeApp } from "firebase/app";
 import {
   indexedDBLocalPersistence,
@@ -11,11 +10,18 @@ import {
   onAuthStateChanged,
   signInAnonymously,
 } from "firebase/auth";
-import {collection, initializeFirestore, onSnapshot, query, where} from "firebase/firestore";
+import {
+  collection,
+  initializeFirestore,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
+import { initialize as workboxGoogleAnalytics } from "workbox-google-analytics";
 
 import { firebaseConfig } from "../../shared/firebase-config";
-import { CoradionServiceWorkerState } from "./types";
 import * as reducers from "./reducers";
+import type { CoradionServiceWorkerState } from "./types";
 
 const firebaseApp = initializeApp(firebaseConfig);
 
@@ -44,19 +50,22 @@ try {
     const userBroadcastChannel = new BroadcastChannel("User");
     userBroadcastChannel.postMessage(reducers.getUser(state));
     const tasksCollection = collection(state.firestore, "tasks");
-    const tasksQuery = query(tasksCollection, where("creator.uid", "==", state.auth.currentUser.uid));
-    const tasksBroadcastChannel = new BroadcastChannel("Tasks")
+    const tasksQuery = query(
+      tasksCollection,
+      where("creator.uid", "==", state.auth.currentUser.uid),
+    );
+    const tasksBroadcastChannel = new BroadcastChannel("Tasks");
     const unsubscribe = onSnapshot(tasksQuery, (snapshot) => {
-      state.tasks = snapshot.docs.map(doc => doc.data());
+      state.tasks = snapshot.docs.map((doc) => doc.data());
       tasksBroadcastChannel.postMessage(state.tasks);
-    })
+    });
   });
 
   workboxGoogleAnalytics();
 
   self.addEventListener("message", async (event) => {
     const { [event.data.type]: reducer = null } = reducers;
-    console.log("sw got message", event)
+    console.log("sw got message", event);
     if (reducer === null) return;
     const result = await reducer(state, event.data.payload);
     event.ports[0].postMessage(result);

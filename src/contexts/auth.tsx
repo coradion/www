@@ -1,21 +1,21 @@
 "use client";
 
 import {
-  createContext,
-  FunctionComponent,
-  PropsWithChildren,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
-import {
-  Auth,
+  type Auth,
+  type User,
   browserPopupRedirectResolver,
   indexedDBLocalPersistence,
   initializeAuth,
   onAuthStateChanged,
-  User,
 } from "firebase/auth";
+import {
+  type FunctionComponent,
+  type PropsWithChildren,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { useFirebase } from "./firebase";
 
 type AuthContextProps = { auth: Auth | null; user: User | null };

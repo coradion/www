@@ -1,5 +1,5 @@
-import React, { ReactNode } from "react";
 import Head from "next/head";
+import React, { type ReactNode } from "react";
 import { SideButtons } from "./side-buttons";
 
 type Props = {

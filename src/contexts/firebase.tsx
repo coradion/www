@@ -1,16 +1,16 @@
 "use client";
 
+import { getAnalytics } from "firebase/analytics";
+import { type FirebaseApp, deleteApp, initializeApp } from "firebase/app";
 import {
+  type FunctionComponent,
+  type PropsWithChildren,
   createContext,
-  FunctionComponent,
-  PropsWithChildren,
   useContext,
   useEffect,
   useState,
 } from "react";
 import { firebaseConfig } from "../shared/firebase-config";
-import { deleteApp, FirebaseApp, initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
 
 const FirebaseContext = createContext<FirebaseApp | null>(null);
 
