@@ -13,7 +13,7 @@
   "dependencies": {
     "@coradion/ui": "^1.5.0",
     "dotenv": "^16.5.0",
-    "firebase": "^11.7.3",
+    "firebase": "^11.8.1",
     "formik": "^2.2.9",
     "next": "^15.3.2",
     "react": "^19.1.0",
