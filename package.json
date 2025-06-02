@@ -15,7 +15,7 @@
     "dotenv": "^16.5.0",
     "firebase": "^11.8.1",
     "formik": "^2.2.9",
-    "next": "^15.3.2",
+    "next": "^15.3.3",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "webpack-merge": "^6.0.1",
