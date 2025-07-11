@@ -12,6 +12,8 @@
   },
   "dependencies": {
     "@coradion/ui": "^1.5.0",
+    "@supabase/ssr": "^0.6.1",
+    "@supabase/supabase-js": "^2.50.5",
     "dotenv": "^17.0.1",
     "firebase": "^11.9.1",
     "formik": "^2.2.9",
@@ -23,6 +25,9 @@
     "workbox-precaching": "^7.3.0",
     "workbox-webpack-plugin": "^7.3.0",
     "workbox-window": "^7.1.0"
+  },
+  "engines": {
+    "node": "24"
   },
   "devDependencies": {
     "@biomejs/biome": "2.1.1",
