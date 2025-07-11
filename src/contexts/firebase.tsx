@@ -1,11 +1,11 @@
 "use client";
 
 import { getAnalytics } from "firebase/analytics";
-import { type FirebaseApp, deleteApp, initializeApp } from "firebase/app";
+import { deleteApp, type FirebaseApp, initializeApp } from "firebase/app";
 import {
+  createContext,
   type FunctionComponent,
   type PropsWithChildren,
-  createContext,
   useContext,
   useEffect,
   useState,

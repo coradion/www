@@ -1,7 +1,9 @@
 @font-face {
   font-family: "Stark";
-  src: url("./stark/Stark.woff2") format("woff2"), url("./stark/Stark.woff")
-    format("woff"), url("./stark/Stark.otf") format("otf");
+  src:
+    url("./stark/Stark.woff2") format("woff2"),
+    url("./stark/Stark.woff") format("woff"),
+    url("./stark/Stark.otf") format("otf");
   font-style: normal;
   font-weight: 400;
   font-display: swap;

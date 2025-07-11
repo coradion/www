@@ -24,7 +24,7 @@ export const useCurrent = (channel: "Tasks" | "User") => {
       broadcastChannel.close();
       setState(null);
     };
-  }, [workbox]);
+  }, [workbox, channel]);
 
   return state;
 };

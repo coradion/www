@@ -7,7 +7,7 @@ export const ProfileButton = () => {
 
   return (
     <Link href="/profile">
-      <button className="btn">
+      <button type="button" className="btn">
         {user === null || typeof user === "undefined" ? (
           "👤"
         ) : (
@@ -16,6 +16,7 @@ export const ProfileButton = () => {
             src={user.photoURL}
             style={{ width: "3rem", height: "3rem", borderRadius: "1rem" }}
             referrerPolicy="no-referrer"
+            alt="profile"
           />
         )}
       </button>

@@ -2,16 +2,16 @@
 
 import {
   type Auth,
-  type User,
   browserPopupRedirectResolver,
   indexedDBLocalPersistence,
   initializeAuth,
   onAuthStateChanged,
+  type User,
 } from "firebase/auth";
 import {
+  createContext,
   type FunctionComponent,
   type PropsWithChildren,
-  createContext,
   useContext,
   useEffect,
   useState,

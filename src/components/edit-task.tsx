@@ -25,7 +25,9 @@ export const EditTask = () => {
 
   return (
     <div onSubmit={handleSubmit}>
-      <button onClick={handleClose}>❌</button>
+      <button type="reset" onClick={handleClose}>
+        ❌
+      </button>
       <form>
         <label htmlFor="title">Title</label>
         <input

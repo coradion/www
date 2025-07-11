@@ -11,12 +11,12 @@ export const SideButtons = () => {
   return (
     <>
       <Link href="/">
-        <button className="btn">
+        <button type="button" className="btn">
           <CoradionLogo />
         </button>
       </Link>
       <ProfileButton />
-      <button className="btn" onClick={() => openTaskEditor()}>
+      <button type="button" className="btn" onClick={() => openTaskEditor()}>
         ➕
       </button>
     </>

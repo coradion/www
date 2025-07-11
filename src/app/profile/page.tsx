@@ -4,9 +4,9 @@ import {
   type AuthProvider,
   GoogleAuthProvider,
   ProviderId,
-  type UserInfo,
   signInWithPopup,
   signOut,
+  type UserInfo,
 } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/auth";
@@ -76,12 +76,13 @@ const ProfilePage = () => {
     <>
       <div>
         <div className="avatar w-24 rounded">
-          {user?.photoURL && <img src={user?.photoURL} />}
+          {user?.photoURL && <img src={user?.photoURL} alt="profile" />}
         </div>
         <div>{user?.displayName ?? "Anonymous"}</div>
         <h4>Connected Accounts</h4>
         {Object.entries(authProviders).map(([key, { name, getProvider }]) => (
           <button
+            type="button"
             key={key}
             disabled={activeProviders.has(key)}
             onClick={() => handleSignIn(getProvider())}
@@ -89,7 +90,9 @@ const ProfilePage = () => {
             {name}
           </button>
         ))}
-        <button onClick={() => handleSignOut()}>Sign Out</button>
+        <button type="button" onClick={() => handleSignOut()}>
+          Sign Out
+        </button>
       </div>
     </>
   );
