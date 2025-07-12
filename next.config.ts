@@ -1,8 +1,9 @@
 import { resolve } from "node:path";
+import type { NextConfig } from "next";
 import { merge } from "webpack-merge";
 import { InjectManifest } from "workbox-webpack-plugin";
 
-export default {
+const nextConfig: NextConfig = {
   webpack: (config, { isServer, dir }) =>
     isServer
       ? config
@@ -37,3 +38,5 @@ export default {
     },
   ],
 };
+
+export default nextConfig;
