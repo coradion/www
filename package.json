@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@coradion/ui": "^1.5.0",
-    "@supabase/ssr": "^0.6.1",
+    "@supabase/ssr": "^0.7.0",
     "@supabase/supabase-js": "^2.55.0",
     "dotenv": "^17.0.1",
     "firebase": "^12.0.0",
@@ -30,7 +30,7 @@
     "node": "24"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.2.0",
+    "@biomejs/biome": "2.2.2",
     "@tailwindcss/postcss": "^4.1.6",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.3.0",
