@@ -13,7 +13,7 @@
   "dependencies": {
     "@coradion/ui": "^1.5.0",
     "@supabase/ssr": "^0.7.0",
-    "@supabase/supabase-js": "^2.55.0",
+    "@supabase/supabase-js": "^2.56.1",
     "dotenv": "^17.0.1",
     "firebase": "^12.0.0",
     "formik": "^2.2.9",
