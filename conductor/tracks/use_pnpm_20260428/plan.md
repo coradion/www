@@ -1,9 +1,9 @@
 # Implementation Plan: Switch to pnpm
 
-## Phase 1: Migration Setup
+## Phase 1: Migration Setup [checkpoint: 18060e2]
 - [x] Task: Create migration verification script (de0802d)
     - [ ] Write a script to check for `pnpm-lock.yaml` and absence of `package-lock.json`
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Migration Setup' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Migration Setup' (18060e2)
 
 ## Phase 2: Execution
 - [ ] Task: Remove legacy artifacts
