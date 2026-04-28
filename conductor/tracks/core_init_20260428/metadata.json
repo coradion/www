@@ -1,8 +1,0 @@
-{
-  "track_id": "core_init_20260428",
-  "type": "feature",
-  "status": "new",
-  "created_at": "2026-04-28T12:00:00Z",
-  "updated_at": "2026-04-28T12:00:00Z",
-  "description": "Initialize core Next.js application with Convex and WorkOS integration"
-}
