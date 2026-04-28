@@ -30,3 +30,24 @@ export const createTask = mutation({
     return taskId;
   },
 });
+
+export const testSetupOrg = mutation({
+  args: { workosOrgId: v.string(), billingTier: v.string() },
+  handler: async (ctx, args) => {
+    return await ctx.db.insert("organizations", {
+      workosOrgId: args.workosOrgId,
+      billingTier: args.billingTier,
+    });
+  },
+});
+
+export const testSetupUser = mutation({
+  args: { tokenIdentifier: v.string(), orgId: v.id("organizations"), role: v.string() },
+  handler: async (ctx, args) => {
+    return await ctx.db.insert("users", {
+      tokenIdentifier: args.tokenIdentifier,
+      orgId: args.orgId,
+      role: args.role,
+    });
+  },
+});
