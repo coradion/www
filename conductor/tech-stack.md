@@ -11,3 +11,6 @@
 
 ## Intelligence & APIs
 - **LLM:** [Google Gemini](https://ai.google.dev/)
+
+## Tooling
+- **Package Manager:** [pnpm](https://pnpm.io/)
