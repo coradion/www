@@ -1,6 +1,6 @@
 # Implementation Plan: Initialize core Next.js application with Convex and WorkOS integration
 
-## Phase 1: Project Scaffolding
+## Phase 1: Project Scaffolding [checkpoint: d8951be]
 - [x] Task: Scaffold Next.js application (b1cfac6)
     - [ ] Run `npx create-next-app` with TS and Tailwind
     - [ ] Configure `tsconfig.json` and `next.config.js`
