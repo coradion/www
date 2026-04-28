@@ -4,7 +4,7 @@
 - [x] Task: Scaffold Next.js application (b1cfac6)
     - [ ] Run `npx create-next-app` with TS and Tailwind
     - [ ] Configure `tsconfig.json` and `next.config.js`
-- [ ] Task: Initialize Convex
+- [~] Task: Initialize Convex
     - [ ] Install `convex` and `convex-test`
     - [ ] Set up `convex/schema.ts` and `convex/functions.ts`
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Project Scaffolding' (Protocol in workflow.md)
