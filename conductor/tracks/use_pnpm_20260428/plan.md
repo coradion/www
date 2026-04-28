@@ -6,7 +6,7 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Migration Setup' (18060e2)
 
 ## Phase 2: Execution
-- [ ] Task: Remove legacy artifacts
+- [x] Task: Remove legacy artifacts (2faf942)
     - [ ] Delete `package-lock.json`
     - [ ] Delete `node_modules`
 - [ ] Task: Initialize pnpm
