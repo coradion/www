@@ -14,7 +14,7 @@
     - [ ] Install WorkOS SDK
     - [ ] Configure environment variables for WorkOS
     - [ ] Implement middleware for authentication protection
-- [~] Task: Set up User Identity in Convex
+- [x] Task: Set up User Identity in Convex (7d91018)
     - [ ] Sync WorkOS user data with Convex
     - [ ] Implement `getUser` query in Convex
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Authentication Integration' (Protocol in workflow.md)
