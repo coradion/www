@@ -9,7 +9,7 @@
 - [x] Task: Remove legacy artifacts (2faf942)
     - [ ] Delete `package-lock.json`
     - [ ] Delete `node_modules`
-- [ ] Task: Initialize pnpm
+- [x] Task: Initialize pnpm (37d8e3f)
     - [ ] Run `pnpm install`
 - [ ] Task: Verify build integrity
     - [ ] Run `pnpm run build` using pnpm
