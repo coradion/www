@@ -4,5 +4,3 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-- [x] **Track: Initialize core Next.js application with Convex and WorkOS integration**
-  *Link: [./tracks/core_init_20260428/](./tracks/core_init_20260428/)*
