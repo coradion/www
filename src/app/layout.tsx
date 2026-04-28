@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   description: "A system for human focus and well-being",
 };
 
-export function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
