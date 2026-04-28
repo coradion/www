@@ -1,6 +1,6 @@
 import { vitest, describe, it, expect } from "vitest";
 import { convexTest } from "convex-test";
-import schema from "./schema";
+import { schema } from "./schema";
 import { listTasks, createTask, testSetupOrg, testSetupUser, syncUser, getUser } from "./functions";
 
 describe("tasks", () => {
