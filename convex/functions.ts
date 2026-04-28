@@ -51,3 +51,46 @@ export const testSetupUser = mutation({
     });
   },
 });
+
+export const syncUser = mutation({
+  args: { tokenIdentifier: v.string(), workosOrgId: v.string() },
+  handler: async (ctx, args) => {
+    let org = await ctx.db
+      .query("organizations")
+      .withIndex("by_workosOrgId", (q) => q.eq("workosOrgId", args.workosOrgId))
+      .unique();
+
+    if (!org) {
+      const orgId = await ctx.db.insert("organizations", {
+        workosOrgId: args.workosOrgId,
+        billingTier: "free",
+      });
+      org = (await ctx.db.get(orgId))!;
+    }
+
+    let user = await ctx.db
+      .query("users")
+      .withIndex("by_tokenIdentifier", (q) => q.eq("tokenIdentifier", args.tokenIdentifier))
+      .unique();
+
+    if (!user) {
+      await ctx.db.insert("users", {
+        tokenIdentifier: args.tokenIdentifier,
+        orgId: org._id,
+        role: "admin", // Default to admin for first user of org
+      });
+    } else if (user.orgId !== org._id) {
+      await ctx.db.patch(user._id, { orgId: org._id });
+    }
+  },
+});
+
+export const getUser = query({
+  args: { tokenIdentifier: v.string() },
+  handler: async (ctx, args) => {
+    return await ctx.db
+      .query("users")
+      .withIndex("by_tokenIdentifier", (q) => q.eq("tokenIdentifier", args.tokenIdentifier))
+      .unique();
+  },
+});
