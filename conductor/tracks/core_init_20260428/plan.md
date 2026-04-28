@@ -18,3 +18,6 @@
     - [ ] Sync WorkOS user data with Convex
     - [ ] Implement `getUser` query in Convex
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Authentication Integration' (Protocol in workflow.md) (9ca761e)
+
+## Phase: Review Fixes
+- [x] Task: Apply review suggestions (cdb544f)
