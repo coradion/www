@@ -1,7 +1,7 @@
 # Implementation Plan: Create Home Page Visit Test
 
 ## Phase 1: Setup Testing Environment
-- [ ] Task: Configure React Testing Library
+- [x] Task: Configure React Testing Library (f508f48)
     - [ ] Install required dev dependencies (e.g., `@testing-library/react`, `jsdom`).
     - [ ] Ensure `vitest.config.ts` is configured for the `jsdom` environment.
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Setup Testing Environment' (Protocol in workflow.md)
