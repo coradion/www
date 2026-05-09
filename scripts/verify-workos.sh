@@ -10,7 +10,7 @@ fi
 echo "✅ Found: @workos-inc/authkit-nextjs"
 
 REQUIRED_FILES=(
-  "middleware.ts"
+  "src/proxy.ts"
 )
 
 MISSING=0
