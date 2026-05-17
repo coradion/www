@@ -12,6 +12,8 @@ export const metadata: Metadata = {
   description: "A system for human focus and well-being",
 };
 
+import { ConvexClientProvider } from "./ConvexClientProvider";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -22,7 +24,11 @@ export default function RootLayout({
       lang="en"
       className={`${splineSans.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-sans">{children}</body>
+      <body className="min-h-full flex flex-col font-sans">
+        <ConvexClientProvider>
+          {children}
+        </ConvexClientProvider>
+      </body>
     </html>
   );
 }
