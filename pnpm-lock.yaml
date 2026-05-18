@@ -12,8 +12,8 @@ importers:
         specifier: ^4.0.1
         version: 4.0.1(next@16.2.6(@babel/core@7.29.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3)
       convex:
-        specifier: ^1.36.1
-        version: 1.36.1(react@19.2.4)
+        specifier: ^1.39.1
+        version: 1.39.1(react@19.2.4)
       next:
         specifier: ^16.2.6
         version: 16.2.6(@babel/core@7.29.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -50,7 +50,7 @@ importers:
         version: 4.1.5(vitest@4.1.5)
       convex-test:
         specifier: ^0.0.50
-        version: 0.0.50(convex@1.36.1(react@19.2.4))
+        version: 0.0.50(convex@1.39.1(react@19.2.4))
       eslint:
         specifier: ^9
         version: 9.39.4(jiti@2.6.1)
@@ -1319,8 +1319,8 @@ packages:
     peerDependencies:
       convex: ^1.32.0
 
-  convex@1.36.1:
-    resolution: {integrity: sha512-NVnwNqU+h8jyPuS0Itvj4MPH9c2yF+tA/RNoSDpCqiLhmYD4+kZxm0dDkVM0QDzz66wem9NqheBb9YQGsHwzBQ==}
+  convex@1.39.1:
+    resolution: {integrity: sha512-W+gVXA7BpRF1xLlS1kGTtKVaqd5yonqbGESKiPtIUXjV744GdDz8IG7RVsSY5KzHbgxuJBHKaJYk+92OIHTskQ==}
     engines: {node: '>=18.0.0', npm: '>=7.0.0'}
     hasBin: true
     peerDependencies:
@@ -3895,11 +3895,11 @@ snapshots:
 
   convert-source-map@2.0.0: {}
 
-  convex-test@0.0.50(convex@1.36.1(react@19.2.4)):
+  convex-test@0.0.50(convex@1.39.1(react@19.2.4)):
     dependencies:
-      convex: 1.36.1(react@19.2.4)
+      convex: 1.39.1(react@19.2.4)
 
-  convex@1.36.1(react@19.2.4):
+  convex@1.39.1(react@19.2.4):
     dependencies:
       esbuild: 0.27.0
       prettier: 3.8.3
