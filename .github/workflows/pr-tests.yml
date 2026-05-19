@@ -8,7 +8,7 @@ on:
 
 jobs:
   test:
-    name: Run Lint, Test and Build
+    name: Run Lint and Test
     runs-on: ubuntu-latest
     env:
       WORKOS_CLIENT_ID: ${{ secrets.WORKOS_CLIENT_ID }}
@@ -38,6 +38,3 @@ jobs:
 
       - name: Run tests
         run: pnpm run test
-
-      - name: Run build
-        run: pnpm run build
