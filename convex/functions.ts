@@ -68,7 +68,7 @@ export const syncUser = mutation({
       org = (await ctx.db.get(orgId))!;
     }
 
-    const user = await ctx.db
+    let user = await ctx.db
       .query("users")
       .withIndex("by_tokenIdentifier", (q) => q.eq("tokenIdentifier", args.tokenIdentifier))
       .unique();
