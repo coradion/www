@@ -12,3 +12,16 @@ updates:
       major-revisions:
         update-types:
           - major
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      non-major-revisions:
+        update-types:
+          - minor
+          - patch
+      major-revisions:
+        update-types:
+          - major
