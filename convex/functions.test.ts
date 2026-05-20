@@ -4,6 +4,15 @@ import schema from "./schema";
 import { listTasks, createTask, testSetupOrg, testSetupUser, syncUser, getUser } from "./functions";
 
 describe("tasks", () => {
+  it("should throw an error when creating a task unauthenticated", async () => {
+    const modules = import.meta.glob("./**/*.*s");
+    const t = convexTest(schema, modules);
+
+    // Action: Create a task without identity
+    // @ts-expect-error - vitest environment
+    await expect(t.mutation(createTask, { rawCapture: "Test task" })).rejects.toThrow("Unauthenticated call to createTask");
+  });
+
   it("should create and list tasks", async () => {
     const modules = import.meta.glob("./**/*.*s");
     const t = convexTest(schema, modules);
@@ -13,11 +22,12 @@ describe("tasks", () => {
     const orgId = await t.mutation(testSetupOrg, { workosOrgId: "org_123", billingTier: "pro" });
     const userAuth = t.withIdentity({ tokenIdentifier: "user_123" });
     // @ts-expect-error - vitest environment
-    const userId = await t.mutation(testSetupUser, { tokenIdentifier: "user_123", orgId, role: "admin" });
+    await t.mutation(testSetupUser, { tokenIdentifier: "user_123", orgId, role: "admin" });
 
     // Action: Create a task
+    const tWithIdentity = t.withIdentity({ tokenIdentifier: "user_123" });
     // @ts-expect-error - vitest environment
-    await t.mutation(createTask, { orgId, userId, rawCapture: "Test task" });
+    await tWithIdentity.mutation(createTask, { rawCapture: "Test task" });
 
     // Validation: List tasks
     // @ts-expect-error - vitest environment
