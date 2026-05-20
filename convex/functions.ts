@@ -4,6 +4,17 @@ import { v } from "convex/values";
 export const listTasks = query({
   args: { orgId: v.id("organizations") },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Unauthenticated");
+    }
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_tokenIdentifier", (q) => q.eq("tokenIdentifier", identity.tokenIdentifier))
+      .unique();
+    if (!user || user.orgId !== args.orgId) {
+      throw new Error("Unauthorized");
+    }
     return await ctx.db
       .query("tasks")
       .withIndex("by_orgId", (q) => q.eq("orgId", args.orgId))
