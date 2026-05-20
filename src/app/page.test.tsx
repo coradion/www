@@ -2,6 +2,12 @@ import { render, screen } from "@testing-library/react";
 import Home from "./page";
 import { describe, it, expect, vi } from "vitest";
 
+
+vi.mock("@workos-inc/authkit-nextjs/components", () => ({
+  useAuth: vi.fn(() => ({ user: null })),
+  AuthKitProvider: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+}));
+
 vi.mock("convex/react", async (importOriginal) => {
   const actual = await importOriginal() as Record<string, unknown>;
   return {
@@ -13,7 +19,7 @@ vi.mock("convex/react", async (importOriginal) => {
              // Usually api.functions.getUser has this shape.
              // We'll just check if it returns a user or an array
          }
-      } catch(e) {}
+      } catch {}
 
       // Let's just return a magic object that has filter on it, just in case
       // Or an array that also has _id so it works for both!

@@ -1,4 +1,5 @@
 "use client";
+import { UserAvatar } from "../components/UserAvatar";
 
 import { Check } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -69,6 +70,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 dark:bg-black p-8">
+      <UserAvatar />
       <main className="flex flex-col w-full max-w-2xl gap-8">
         <header className="flex flex-col gap-2">
           <h1 className="text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">

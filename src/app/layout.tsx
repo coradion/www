@@ -1,3 +1,4 @@
+import { AuthKitProvider } from "@workos-inc/authkit-nextjs/components";
 import type { Metadata } from "next";
 import { Spline_Sans } from "next/font/google";
 import "./globals.css";
@@ -25,9 +26,11 @@ export default function RootLayout({
       className={`${splineSans.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans">
-        <ConvexClientProvider>
+        <AuthKitProvider>
+          <ConvexClientProvider>
           {children}
         </ConvexClientProvider>
+        </AuthKitProvider>
       </body>
     </html>
   );
