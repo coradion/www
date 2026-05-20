@@ -1,4 +1,4 @@
-import { query, mutation } from "./_generated/server";
+import { query, mutation, internalMutation } from "./_generated/server";
 import { v } from "convex/values";
 
 export const listTasks = query({
@@ -42,7 +42,7 @@ export const createTask = mutation({
   },
 });
 
-export const testSetupOrg = mutation({
+export const testSetupOrg = internalMutation({
   args: { workosOrgId: v.string(), billingTier: v.string() },
   handler: async (ctx, args) => {
     return await ctx.db.insert("organizations", {
@@ -52,7 +52,7 @@ export const testSetupOrg = mutation({
   },
 });
 
-export const testSetupUser = mutation({
+export const testSetupUser = internalMutation({
   args: { tokenIdentifier: v.string(), orgId: v.id("organizations"), role: v.string() },
   handler: async (ctx, args) => {
     return await ctx.db.insert("users", {
