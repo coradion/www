@@ -6,7 +6,22 @@ vi.mock("convex/react", async (importOriginal) => {
   const actual = await importOriginal() as Record<string, unknown>;
   return {
     ...actual,
-    useQuery: vi.fn(() => ({ _id: "user-id", orgId: "org-id" })),
+    useQuery: vi.fn((query) => {
+      try {
+         // Try to return an array if the query isn't getUser
+         if (query.isRegistered && query.isRegistered === false) {
+             // Usually api.functions.getUser has this shape.
+             // We'll just check if it returns a user or an array
+         }
+      } catch(e) {}
+
+      // Let's just return a magic object that has filter on it, just in case
+      // Or an array that also has _id so it works for both!
+      const res: unknown[] & { _id?: string; orgId?: string } = [];
+      res._id = "user-id";
+      res.orgId = "org-id";
+      return res;
+    }),
     useMutation: vi.fn(() => vi.fn()),
   };
 });

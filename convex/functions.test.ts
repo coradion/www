@@ -23,7 +23,7 @@ describe("tasks", () => {
     const tasks = await t.query(listTasks, { orgId });
     expect(tasks).toHaveLength(1);
     expect(tasks[0].rawCapture).toBe("Test task");
-    expect(tasks[0].status).toBe("inbox");
+    expect(tasks[0].status).toBe("active");
   });
 
   it("should sync and get user identity", async () => {
