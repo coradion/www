@@ -46,4 +46,37 @@ describe("tasks", () => {
     // Check organization was created/linked
     expect(user?.orgId).toBeDefined();
   });
+
+  it("should update user orgId when synced with a different org", async () => {
+    const modules = import.meta.glob("./**/*.*s");
+    const t = convexTest(schema, modules);
+
+    // Action 1: Sync user with first org
+    // @ts-expect-error - vitest environment
+    await t.mutation(syncUser, {
+        tokenIdentifier: "user_multi_org",
+        workosOrgId: "org_first",
+    });
+
+    // Validation 1: Get user and store first orgId
+    // @ts-expect-error - vitest environment
+    const user1 = await t.query(getUser, { tokenIdentifier: "user_multi_org" });
+    expect(user1).not.toBeNull();
+    const firstOrgId = user1?.orgId;
+    expect(firstOrgId).toBeDefined();
+
+    // Action 2: Sync same user with second org
+    // @ts-expect-error - vitest environment
+    await t.mutation(syncUser, {
+        tokenIdentifier: "user_multi_org",
+        workosOrgId: "org_second",
+    });
+
+    // Validation 2: Get user again and verify orgId changed
+    // @ts-expect-error - vitest environment
+    const user2 = await t.query(getUser, { tokenIdentifier: "user_multi_org" });
+    expect(user2).not.toBeNull();
+    expect(user2?.orgId).toBeDefined();
+    expect(user2?.orgId).not.toBe(firstOrgId);
+  });
 });
