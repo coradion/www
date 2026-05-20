@@ -22,7 +22,7 @@ export const createTask = mutation({
       orgId: args.orgId,
       userId: args.userId,
       rawCapture: args.rawCapture,
-      status: "inbox",
+      status: "active", // Updated to default to active for self-captured tasks as per spec,
       eisenhowerQuadrant: 2, // Default to Important/Not Urgent
       bentoSize: "medium",
       energyRequired: 5,
@@ -68,7 +68,7 @@ export const syncUser = mutation({
       org = (await ctx.db.get(orgId))!;
     }
 
-    let user = await ctx.db
+    const user = await ctx.db
       .query("users")
       .withIndex("by_tokenIdentifier", (q) => q.eq("tokenIdentifier", args.tokenIdentifier))
       .unique();
@@ -92,5 +92,12 @@ export const getUser = query({
       .query("users")
       .withIndex("by_tokenIdentifier", (q) => q.eq("tokenIdentifier", args.tokenIdentifier))
       .unique();
+  },
+});
+
+export const completeTask = mutation({
+  args: { taskId: v.id("tasks") },
+  handler: async (ctx, args) => {
+    return await ctx.db.patch(args.taskId, { status: "completed" });
   },
 });
