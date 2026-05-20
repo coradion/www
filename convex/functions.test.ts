@@ -4,6 +4,15 @@ import schema from "./schema";
 import { listTasks, createTask, testSetupOrg, testSetupUser, syncUser, getUser } from "./functions";
 
 describe("tasks", () => {
+  it("should throw an error when creating a task unauthenticated", async () => {
+    const modules = import.meta.glob("./**/*.*s");
+    const t = convexTest(schema, modules);
+
+    // Action: Create a task without identity
+    // @ts-expect-error - vitest environment
+    await expect(t.mutation(createTask, { rawCapture: "Test task" })).rejects.toThrow("Unauthenticated call to createTask");
+  });
+
   it("should create and list tasks", async () => {
     const modules = import.meta.glob("./**/*.*s");
     const t = convexTest(schema, modules);
@@ -11,16 +20,18 @@ describe("tasks", () => {
     // Setup: Create a test organization and user
     // @ts-expect-error - vitest environment
     const orgId = await t.mutation(testSetupOrg, { workosOrgId: "org_123", billingTier: "pro" });
+    const userAuth = t.withIdentity({ tokenIdentifier: "user_123" });
     // @ts-expect-error - vitest environment
-    const userId = await t.mutation(testSetupUser, { tokenIdentifier: "user_123", orgId, role: "admin" });
+    await t.mutation(testSetupUser, { tokenIdentifier: "user_123", orgId, role: "admin" });
 
     // Action: Create a task
+    const tWithIdentity = t.withIdentity({ tokenIdentifier: "user_123" });
     // @ts-expect-error - vitest environment
-    await t.mutation(createTask, { orgId, userId, rawCapture: "Test task" });
+    await tWithIdentity.mutation(createTask, { rawCapture: "Test task" });
 
     // Validation: List tasks
     // @ts-expect-error - vitest environment
-    const tasks = await t.query(listTasks, { orgId });
+    const tasks = await userAuth.query(listTasks, { orgId });
     expect(tasks).toHaveLength(1);
     expect(tasks[0].rawCapture).toBe("Test task");
     expect(tasks[0].status).toBe("active");
@@ -45,5 +56,38 @@ describe("tasks", () => {
     
     // Check organization was created/linked
     expect(user?.orgId).toBeDefined();
+  });
+
+  it("should update user orgId when synced with a different org", async () => {
+    const modules = import.meta.glob("./**/*.*s");
+    const t = convexTest(schema, modules);
+
+    // Action 1: Sync user with first org
+    // @ts-expect-error - vitest environment
+    await t.mutation(syncUser, {
+        tokenIdentifier: "user_multi_org",
+        workosOrgId: "org_first",
+    });
+
+    // Validation 1: Get user and store first orgId
+    // @ts-expect-error - vitest environment
+    const user1 = await t.query(getUser, { tokenIdentifier: "user_multi_org" });
+    expect(user1).not.toBeNull();
+    const firstOrgId = user1?.orgId;
+    expect(firstOrgId).toBeDefined();
+
+    // Action 2: Sync same user with second org
+    // @ts-expect-error - vitest environment
+    await t.mutation(syncUser, {
+        tokenIdentifier: "user_multi_org",
+        workosOrgId: "org_second",
+    });
+
+    // Validation 2: Get user again and verify orgId changed
+    // @ts-expect-error - vitest environment
+    const user2 = await t.query(getUser, { tokenIdentifier: "user_multi_org" });
+    expect(user2).not.toBeNull();
+    expect(user2?.orgId).toBeDefined();
+    expect(user2?.orgId).not.toBe(firstOrgId);
   });
 });

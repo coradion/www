@@ -1,9 +1,20 @@
-import { query, mutation } from "./_generated/server";
+import { query, mutation, internalMutation } from "./_generated/server";
 import { v } from "convex/values";
 
 export const listTasks = query({
   args: { orgId: v.id("organizations") },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Unauthenticated");
+    }
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_tokenIdentifier", (q) => q.eq("tokenIdentifier", identity.tokenIdentifier))
+      .unique();
+    if (!user || user.orgId !== args.orgId) {
+      throw new Error("Unauthorized");
+    }
     return await ctx.db
       .query("tasks")
       .withIndex("by_orgId", (q) => q.eq("orgId", args.orgId))
@@ -13,14 +24,26 @@ export const listTasks = query({
 
 export const createTask = mutation({
   args: {
-    orgId: v.id("organizations"),
-    userId: v.id("users"),
     rawCapture: v.string(),
   },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Unauthenticated call to createTask");
+    }
+
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_tokenIdentifier", (q) => q.eq("tokenIdentifier", identity.tokenIdentifier))
+      .unique();
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
     const taskId = await ctx.db.insert("tasks", {
-      orgId: args.orgId,
-      userId: args.userId,
+      orgId: user.orgId,
+      userId: user._id,
       rawCapture: args.rawCapture,
       status: "active", // Updated to default to active for self-captured tasks as per spec,
       eisenhowerQuadrant: 2, // Default to Important/Not Urgent
@@ -31,7 +54,7 @@ export const createTask = mutation({
   },
 });
 
-export const testSetupOrg = mutation({
+export const testSetupOrg = internalMutation({
   args: { workosOrgId: v.string(), billingTier: v.string() },
   handler: async (ctx, args) => {
     return await ctx.db.insert("organizations", {
@@ -41,7 +64,7 @@ export const testSetupOrg = mutation({
   },
 });
 
-export const testSetupUser = mutation({
+export const testSetupUser = internalMutation({
   args: { tokenIdentifier: v.string(), orgId: v.id("organizations"), role: v.string() },
   handler: async (ctx, args) => {
     return await ctx.db.insert("users", {
@@ -65,7 +88,12 @@ export const syncUser = mutation({
         workosOrgId: args.workosOrgId,
         billingTier: "free",
       });
-      org = (await ctx.db.get(orgId))!;
+      org = {
+        _id: orgId,
+        _creationTime: Date.now(),
+        workosOrgId: args.workosOrgId,
+        billingTier: "free",
+      };
     }
 
     const user = await ctx.db
