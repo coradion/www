@@ -13,7 +13,7 @@ vi.mock("convex/react", async (importOriginal) => {
              // Usually api.functions.getUser has this shape.
              // We'll just check if it returns a user or an array
          }
-      } catch(e) {}
+      } catch {}
 
       // Let's just return a magic object that has filter on it, just in case
       // Or an array that also has _id so it works for both!
