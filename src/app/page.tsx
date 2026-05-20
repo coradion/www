@@ -39,8 +39,6 @@ export default function Home() {
     try {
       if (user) {
         await createTask({
-          orgId: user.orgId,
-          userId: user._id,
           rawCapture: captureText.trim(),
         });
         setCaptureText("");
