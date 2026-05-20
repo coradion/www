@@ -65,7 +65,12 @@ export const syncUser = mutation({
         workosOrgId: args.workosOrgId,
         billingTier: "free",
       });
-      org = (await ctx.db.get(orgId))!;
+      org = {
+        _id: orgId,
+        _creationTime: Date.now(),
+        workosOrgId: args.workosOrgId,
+        billingTier: "free",
+      };
     }
 
     const user = await ctx.db
