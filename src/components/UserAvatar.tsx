@@ -22,7 +22,7 @@ export function UserAvatar() {
   };
 
   return (
-    <div className="absolute top-4 right-4 sm:top-8 sm:right-8 flex items-center justify-center w-10 h-10 bg-zinc-200 dark:bg-zinc-800 rounded-full overflow-hidden border border-zinc-300 dark:border-zinc-700 shadow-sm">
+    <div className="absolute top-4 right-4 sm:top-8 sm:right-8 flex items-center justify-center w-10 h-10 bg-zinc-200 dark:bg-zinc-800 rounded-full overflow-hidden border border-zinc-300 dark:border-zinc-700 shadow-sm relative">
       {user.profilePictureUrl ? (
         <Image
           src={user.profilePictureUrl}
