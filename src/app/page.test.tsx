@@ -2,6 +2,12 @@ import { render, screen } from "@testing-library/react";
 import Home from "./page";
 import { describe, it, expect, vi } from "vitest";
 
+
+vi.mock("@workos-inc/authkit-nextjs/components", () => ({
+  useAuth: vi.fn(() => ({ user: null })),
+  AuthKitProvider: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+}));
+
 vi.mock("convex/react", async (importOriginal) => {
   const actual = await importOriginal() as Record<string, unknown>;
   return {

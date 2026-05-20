@@ -9,6 +9,13 @@ vi.mock("next/font/google", () => ({
   }),
 }));
 
+
+vi.mock("@workos-inc/authkit-nextjs/components", () => ({
+  AuthKitProvider: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="auth-kit-provider">{children}</div>
+  ),
+}));
+
 vi.mock("./ConvexClientProvider", () => ({
   ConvexClientProvider: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="convex-client-provider">{children}</div>
