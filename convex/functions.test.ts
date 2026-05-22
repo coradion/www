@@ -90,4 +90,22 @@ describe("tasks", () => {
     expect(user2?.orgId).toBeDefined();
     expect(user2?.orgId).not.toBe(firstOrgId);
   });
+
+  it("should sync and get user identity with optional workosOrgId fallback", async () => {
+    const modules = import.meta.glob("./**/*.*s");
+    const t = convexTest(schema, modules);
+
+    // Action: Sync a user without workosOrgId
+    // @ts-expect-error - vitest environment
+    await t.mutation(syncUser, {
+        tokenIdentifier: "user_personal",
+    });
+
+    // Validation: Get user
+    // @ts-expect-error - vitest environment
+    const user = await t.query(getUser, { tokenIdentifier: "user_personal" });
+    expect(user).not.toBeNull();
+    expect(user?.tokenIdentifier).toBe("user_personal");
+    expect(user?.orgId).toBeDefined();
+  });
 });

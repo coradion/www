@@ -76,22 +76,24 @@ export const testSetupUser = internalMutation({
 });
 
 export const syncUser = mutation({
-  args: { tokenIdentifier: v.string(), workosOrgId: v.string() },
+  args: { tokenIdentifier: v.string(), workosOrgId: v.optional(v.string()) },
   handler: async (ctx, args) => {
+    const orgIdToUse = args.workosOrgId ?? args.tokenIdentifier;
+
     let org = await ctx.db
       .query("organizations")
-      .withIndex("by_workosOrgId", (q) => q.eq("workosOrgId", args.workosOrgId))
+      .withIndex("by_workosOrgId", (q) => q.eq("workosOrgId", orgIdToUse))
       .unique();
 
     if (!org) {
       const orgId = await ctx.db.insert("organizations", {
-        workosOrgId: args.workosOrgId,
+        workosOrgId: orgIdToUse,
         billingTier: "free",
       });
       org = {
         _id: orgId,
         _creationTime: Date.now(),
-        workosOrgId: args.workosOrgId,
+        workosOrgId: orgIdToUse,
         billingTier: "free",
       };
     }
