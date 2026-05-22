@@ -15,7 +15,7 @@ vi.mock("@workos-inc/authkit-nextjs/components", () => ({
 
 vi.mock("next/link", () => {
     return {
-        default: (props: any) => {
+        default: (props: { href: string; children: React.ReactNode }) => {
             return <a href={props.href}>{props.children}</a>;
         }
     }
