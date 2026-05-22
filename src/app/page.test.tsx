@@ -2,6 +2,25 @@ import { render, screen } from "@testing-library/react";
 import Home from "./page";
 import { describe, it, expect, vi } from "vitest";
 
+
+vi.mock("@workos-inc/authkit-nextjs/components", () => ({
+  useAuth: vi.fn(() => ({
+    user: null,
+    organizationId: undefined,
+    signOut: vi.fn(),
+    getAuth: vi.fn(),
+    refreshAuth: vi.fn()
+  }))
+}));
+
+vi.mock("next/link", () => {
+    return {
+        default: (props: any) => {
+            return <a href={props.href}>{props.children}</a>;
+        }
+    }
+});
+
 vi.mock("convex/react", async (importOriginal) => {
   const actual = await importOriginal() as Record<string, unknown>;
   return {
@@ -22,9 +41,12 @@ vi.mock("convex/react", async (importOriginal) => {
       res.orgId = "org-id";
       return res;
     }),
+
     useMutation: vi.fn(() => vi.fn()),
+    useConvexAuth: vi.fn(() => ({ isAuthenticated: false })),
   };
 });
+
 
 describe("Home Page", () => {
   it("renders successfully and displays expected content", () => {

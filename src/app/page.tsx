@@ -2,37 +2,40 @@
 
 import { Check } from "lucide-react";
 import { useState, useEffect } from "react";
-import { useMutation, useQuery } from "convex/react";
+import { useMutation, useQuery, useConvexAuth } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import { useAuth } from "@workos-inc/authkit-nextjs/components";
+import Link from "next/link";
 
 export default function Home() {
   const [captureText, setCaptureText] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Mock user handling: sync a test user to get their user ID and org ID
+  const { user: authUser, signOut } = useAuth();
+  const { isAuthenticated } = useConvexAuth();
+
   const syncUser = useMutation(api.functions.syncUser);
-  const user = useQuery(api.functions.getUser, { tokenIdentifier: "mock-user-123" });
+  const user = useQuery(api.functions.getUser, authUser ? { tokenIdentifier: authUser.id } : "skip");
 
   // Query active tasks
-  const tasks = useQuery(api.functions.listTasks, user ? { orgId: user.orgId } : "skip");
+  const tasks = useQuery(api.functions.listTasks, (user && isAuthenticated) ? { orgId: user.orgId } : "skip");
   const activeTasks = tasks?.filter((task: { status: string; _id: string; rawCapture: string }) => task.status === "active") ?? [];
 
   useEffect(() => {
-    if (user === null) {
-      // Create user if they don't exist
+    if (authUser && user === null) {
+      // Create/sync user if they are logged in but don't exist in our db yet
       syncUser({
-        tokenIdentifier: "mock-user-123",
-        workosOrgId: "mock-org-123",
+        tokenIdentifier: authUser.id,
+        // @ts-expect-error - missing orgId from typing
+        workosOrgId: authUser.organizationId || undefined,
       }).catch(console.error);
     }
-  }, [user, syncUser]);
+  }, [user, authUser, syncUser]);
 
   const createTask = useMutation(api.functions.createTask);
   const completeTask = useMutation((api.functions as unknown as { completeTask: import("convex/server").FunctionReference<"mutation"> }).completeTask);
 
   const handleCapture = async () => {
-    // If not using real auth yet, allow submission even if user isn't loaded completely
-    // Let convex test setup handle the rest if mock user isn't ready
     if (!captureText.trim()) return;
 
     setIsSubmitting(true);
@@ -68,13 +71,40 @@ export default function Home() {
   return (
     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 dark:bg-black p-8">
       <main className="flex flex-col w-full max-w-2xl gap-8">
-        <header className="flex flex-col gap-2">
-          <h1 className="text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
-            Eudemonic Tasks
-          </h1>
-          <p className="text-lg text-zinc-600 dark:text-zinc-400">
-            Aligning effort with your neurobiology.
-          </p>
+        <header className="flex items-start justify-between">
+          <div className="flex flex-col gap-2">
+            <h1 className="text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+              Eudemonic Tasks
+            </h1>
+            <p className="text-lg text-zinc-600 dark:text-zinc-400">
+              Aligning effort with your neurobiology.
+            </p>
+          </div>
+          <div className="flex gap-2">
+            {authUser ? (
+              <button
+                onClick={() => signOut()}
+                className="text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
+              >
+                Sign out
+              </button>
+            ) : (
+              <>
+                <Link
+                  href="/sign-in"
+                  className="text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
+                >
+                  Sign in
+                </Link>
+                <Link
+                  href="/sign-up"
+                  className="text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
+                >
+                  Sign up
+                </Link>
+              </>
+            )}
+          </div>
         </header>
 
         <section className="bg-white dark:bg-zinc-900 rounded-2xl p-6 shadow-sm border border-zinc-200 dark:border-zinc-800">
