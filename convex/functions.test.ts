@@ -50,7 +50,9 @@ describe("tasks", () => {
 
     // Validation: Get user
     // @ts-expect-error - vitest environment
-    const user = await t.query(getUser, { tokenIdentifier: "user_abc" });
+    const tWithIdentity = t.withIdentity({ tokenIdentifier: "user_abc" });
+    // @ts-expect-error - vitest environment
+    const user = await tWithIdentity.query(getUser, { tokenIdentifier: "user_abc" });
     expect(user).not.toBeNull();
     expect(user?.tokenIdentifier).toBe("user_abc");
     
@@ -71,7 +73,9 @@ describe("tasks", () => {
 
     // Validation 1: Get user and store first orgId
     // @ts-expect-error - vitest environment
-    const user1 = await t.query(getUser, { tokenIdentifier: "user_multi_org" });
+    const tWithIdentity1 = t.withIdentity({ tokenIdentifier: "user_multi_org" });
+    // @ts-expect-error - vitest environment
+    const user1 = await tWithIdentity1.query(getUser, { tokenIdentifier: "user_multi_org" });
     expect(user1).not.toBeNull();
     const firstOrgId = user1?.orgId;
     expect(firstOrgId).toBeDefined();
@@ -85,7 +89,9 @@ describe("tasks", () => {
 
     // Validation 2: Get user again and verify orgId changed
     // @ts-expect-error - vitest environment
-    const user2 = await t.query(getUser, { tokenIdentifier: "user_multi_org" });
+    const tWithIdentity2 = t.withIdentity({ tokenIdentifier: "user_multi_org" });
+    // @ts-expect-error - vitest environment
+    const user2 = await tWithIdentity2.query(getUser, { tokenIdentifier: "user_multi_org" });
     expect(user2).not.toBeNull();
     expect(user2?.orgId).toBeDefined();
     expect(user2?.orgId).not.toBe(firstOrgId);
@@ -103,7 +109,9 @@ describe("tasks", () => {
 
     // Validation: Get user
     // @ts-expect-error - vitest environment
-    const user = await t.query(getUser, { tokenIdentifier: "user_personal" });
+    const tWithIdentity = t.withIdentity({ tokenIdentifier: "user_personal" });
+    // @ts-expect-error - vitest environment
+    const user = await tWithIdentity.query(getUser, { tokenIdentifier: "user_personal" });
     expect(user).not.toBeNull();
     expect(user?.tokenIdentifier).toBe("user_personal");
     expect(user?.orgId).toBeDefined();

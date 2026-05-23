@@ -118,6 +118,14 @@ export const syncUser = mutation({
 export const getUser = query({
   args: { tokenIdentifier: v.string() },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Unauthenticated call to getUser");
+    }
+    if (identity.tokenIdentifier !== args.tokenIdentifier) {
+      throw new Error("Unauthorized to access this user");
+    }
+
     return await ctx.db
       .query("users")
       .withIndex("by_tokenIdentifier", (q) => q.eq("tokenIdentifier", args.tokenIdentifier))
