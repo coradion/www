@@ -13,12 +13,10 @@ import {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function setupUserAndOrg(t: any, userId: string, orgIdStr: string) {
-  // @ts-expect-error - vitest environment
   const orgId = await t.mutation(testSetupOrg, {
     workosOrgId: orgIdStr,
     billingTier: "pro",
   });
-  // @ts-expect-error - vitest environment
   await t.mutation(testSetupUser, {
     tokenIdentifier: userId,
     orgId,
