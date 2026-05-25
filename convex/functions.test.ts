@@ -196,4 +196,18 @@ describe("tasks", () => {
     expect(tasks).toHaveLength(1);
     expect(tasks[0].status).toBe("completed");
   });
+
+  it("should throw an error when completing a non-existent task", async () => {
+    const t = initTest();
+
+    // Setup: Create an org and user
+    await setupUserAndOrg(t, "user_nonexistent", "org_nonexistent");
+
+    // Action: Try to complete a task that doesn't exist using a syntactically valid ID format
+    const tWithIdentity = t.withIdentity({ tokenIdentifier: "user_nonexistent" });
+    const fakeId = "jd10wtp2eb15a2h7z1s7c0b050m7";
+    // @ts-expect-error - vitest environment
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await expect(tWithIdentity.mutation(completeTask, { taskId: fakeId as any })).rejects.toThrow("Task not found");
+  });
 });
