@@ -26,11 +26,7 @@ export default function Home() {
     api.functions.listTasks,
     user && isAuthenticated ? { orgId: user.orgId } : "skip",
   );
-  const activeTasks =
-    tasks?.filter(
-      (task: { status: string; _id: string; rawCapture: string }) =>
-        task.status === "active",
-    ) ?? [];
+  const activeTasks = tasks ?? [];
 
   useEffect(() => {
     if (authUser && user === null) {

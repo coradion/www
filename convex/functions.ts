@@ -32,6 +32,7 @@ export const listTasks = query({
     return await ctx.db
       .query("tasks")
       .withIndex("by_orgId", (q) => q.eq("orgId", args.orgId))
+      .filter((q) => q.eq(q.field("status"), "active"))
       .collect();
   },
 });
