@@ -4,6 +4,7 @@ import { Check } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useMutation, useQuery, useConvexAuth } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import { Id } from "../../convex/_generated/dataModel";
 import { useAuth } from "@workos-inc/authkit-nextjs/components";
 import Link from "next/link";
 
@@ -15,11 +16,21 @@ export default function Home() {
   const { isAuthenticated } = useConvexAuth();
 
   const syncUser = useMutation(api.functions.syncUser);
-  const user = useQuery(api.functions.getUser, authUser ? { tokenIdentifier: authUser.id } : "skip");
+  const user = useQuery(
+    api.functions.getUser,
+    authUser ? { tokenIdentifier: authUser.id } : "skip",
+  );
 
   // Query active tasks
-  const tasks = useQuery(api.functions.listTasks, (user && isAuthenticated) ? { orgId: user.orgId } : "skip");
-  const activeTasks = tasks?.filter((task: { status: string; _id: string; rawCapture: string }) => task.status === "active") ?? [];
+  const tasks = useQuery(
+    api.functions.listTasks,
+    user && isAuthenticated ? { orgId: user.orgId } : "skip",
+  );
+  const activeTasks =
+    tasks?.filter(
+      (task: { status: string; _id: string; rawCapture: string }) =>
+        task.status === "active",
+    ) ?? [];
 
   useEffect(() => {
     if (authUser && user === null) {
@@ -33,7 +44,7 @@ export default function Home() {
   }, [user, authUser, syncUser]);
 
   const createTask = useMutation(api.functions.createTask);
-  const completeTask = useMutation((api.functions as unknown as { completeTask: import("convex/server").FunctionReference<"mutation"> }).completeTask);
+  const completeTask = useMutation(api.functions.completeTask);
 
   const handleCapture = async () => {
     if (!captureText.trim()) return;
@@ -53,8 +64,7 @@ export default function Home() {
     }
   };
 
-
-  const handleComplete = async (taskId: string) => {
+  const handleComplete = async (taskId: Id<"tasks">) => {
     try {
       await completeTask({ taskId });
     } catch (error) {
@@ -113,8 +123,8 @@ export default function Home() {
               Quick Capture
             </h2>
             <div className="flex gap-2">
-              <input 
-                type="text" 
+              <input
+                type="text"
                 value={captureText}
                 onChange={(e) => setCaptureText(e.target.value)}
                 onKeyDown={handleKeyDown}
@@ -152,7 +162,10 @@ export default function Home() {
                     className="flex items-center justify-center w-8 h-8 rounded-full border-2 border-zinc-300 dark:border-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors"
                     aria-label="Complete task"
                   >
-                    <Check className="w-4 h-4 text-transparent hover:text-green-500 transition-colors" strokeWidth={3} />
+                    <Check
+                      className="w-4 h-4 text-transparent hover:text-green-500 transition-colors"
+                      strokeWidth={3}
+                    />
                   </button>
                 </li>
               ))}
