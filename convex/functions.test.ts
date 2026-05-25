@@ -193,8 +193,15 @@ describe("tasks", () => {
     // Validation: Check task status
     // @ts-expect-error - vitest environment
     const tasks = await tWithIdentity.query(listTasks, { orgId });
-    expect(tasks).toHaveLength(1);
-    expect(tasks[0].status).toBe("completed");
+    // listTasks only returns active tasks now, so it should be empty
+    expect(tasks).toHaveLength(0);
+
+    // Verify the task was actually completed by querying the DB directly
+    await t.run(async (ctx) => {
+      const dbTasks = await ctx.db.query("tasks").withIndex("by_orgId", (q) => q.eq("orgId", orgId)).collect();
+      expect(dbTasks).toHaveLength(1);
+      expect(dbTasks[0].status).toBe("completed");
+    });
   });
 
   it("should throw an error when completing a non-existent task", async () => {
