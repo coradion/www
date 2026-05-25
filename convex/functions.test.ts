@@ -42,6 +42,15 @@ async function setupUserAndOrg(t: any, userId: string, orgIdStr: string) {
   return orgId;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function performSyncUser(t: any, userId: string, workosOrgId?: string) {
+  const tWithIdentity = t.withIdentity({ tokenIdentifier: userId });
+  return await tWithIdentity.mutation(syncUser, {
+    tokenIdentifier: userId,
+    workosOrgId,
+  });
+}
+
 describe("tasks", () => {
   it("should throw an error when creating a task unauthenticated", async () => {
     const t = initTest();
@@ -76,11 +85,7 @@ describe("tasks", () => {
     const t = initTest();
 
     // Action: Sync a user (first time creates it)
-    // @ts-expect-error - vitest environment
-    await t.mutation(syncUser, {
-      tokenIdentifier: "user_abc",
-      workosOrgId: "org_abc",
-    });
+    await performSyncUser(t, "user_abc", "org_abc");
 
     // Validation: Get user
     const user = await fetchUser(t, "user_abc");
@@ -95,11 +100,7 @@ describe("tasks", () => {
     const t = initTest();
 
     // Action 1: Sync user with first org
-    // @ts-expect-error - vitest environment
-    await t.mutation(syncUser, {
-      tokenIdentifier: "user_multi_org",
-      workosOrgId: "org_first",
-    });
+    await performSyncUser(t, "user_multi_org", "org_first");
 
     // Validation 1: Get user and store first orgId
     const user1 = await fetchUser(t, "user_multi_org");
@@ -108,11 +109,7 @@ describe("tasks", () => {
     expect(firstOrgId).toBeDefined();
 
     // Action 2: Sync same user with second org
-    // @ts-expect-error - vitest environment
-    await t.mutation(syncUser, {
-      tokenIdentifier: "user_multi_org",
-      workosOrgId: "org_second",
-    });
+    await performSyncUser(t, "user_multi_org", "org_second");
 
     // Validation 2: Get user again and verify orgId changed
     const user2 = await fetchUser(t, "user_multi_org");
@@ -125,16 +122,30 @@ describe("tasks", () => {
     const t = initTest();
 
     // Action: Sync a user without workosOrgId
-    // @ts-expect-error - vitest environment
-    await t.mutation(syncUser, {
-      tokenIdentifier: "user_personal",
-    });
+    await performSyncUser(t, "user_personal");
 
     // Validation: Get user
     const user = await fetchUser(t, "user_personal");
     expect(user).not.toBeNull();
     expect(user?.tokenIdentifier).toBe("user_personal");
     expect(user?.orgId).toBeDefined();
+  });
+
+  it("should throw an error when syncing a user unauthenticated", async () => {
+    const t = initTest();
+
+    // Action: Sync a user without identity
+    // @ts-expect-error - vitest environment
+    await expect(t.mutation(syncUser, { tokenIdentifier: "user_unauth" })).rejects.toThrow("Unauthenticated call to syncUser");
+  });
+
+  it("should throw an error when syncing a user with mismatched tokenIdentifier", async () => {
+    const t = initTest();
+
+    // Action: Sync a user with different tokenIdentifier than identity
+    const tWithIdentity = t.withIdentity({ tokenIdentifier: "user_authorized" });
+    // @ts-expect-error - vitest environment
+    await expect(tWithIdentity.mutation(syncUser, { tokenIdentifier: "user_other" })).rejects.toThrow("Unauthorized to sync this user");
   });
 
   it("should throw an error when completing a task unauthenticated", async () => {
