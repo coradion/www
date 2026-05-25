@@ -17,9 +17,10 @@ describe("tasks", () => {
 
     // Action: Create a task without identity
     // @ts-expect-error - vitest environment
-    await expect(
-      t.mutation(createTask, { rawCapture: "Test task" }),
-    ).rejects.toThrow("Unauthenticated call to createTask");
+    const promise = t.mutation(createTask, { rawCapture: "Test task" });
+    await expect(promise).rejects.toThrow(
+      "Unauthenticated call to createTask",
+    );
   });
 
   it("should create and list tasks", async () => {
