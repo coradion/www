@@ -49,7 +49,6 @@ describe("tasks", () => {
     });
 
     // Validation: Get user
-    // @ts-expect-error - vitest environment
     const tWithIdentity = t.withIdentity({ tokenIdentifier: "user_abc" });
     // @ts-expect-error - vitest environment
     const user = await tWithIdentity.query(getUser, { tokenIdentifier: "user_abc" });
@@ -72,7 +71,6 @@ describe("tasks", () => {
     });
 
     // Validation 1: Get user and store first orgId
-    // @ts-expect-error - vitest environment
     const tWithIdentity1 = t.withIdentity({ tokenIdentifier: "user_multi_org" });
     // @ts-expect-error - vitest environment
     const user1 = await tWithIdentity1.query(getUser, { tokenIdentifier: "user_multi_org" });
@@ -88,7 +86,6 @@ describe("tasks", () => {
     });
 
     // Validation 2: Get user again and verify orgId changed
-    // @ts-expect-error - vitest environment
     const tWithIdentity2 = t.withIdentity({ tokenIdentifier: "user_multi_org" });
     // @ts-expect-error - vitest environment
     const user2 = await tWithIdentity2.query(getUser, { tokenIdentifier: "user_multi_org" });
@@ -108,7 +105,6 @@ describe("tasks", () => {
     });
 
     // Validation: Get user
-    // @ts-expect-error - vitest environment
     const tWithIdentity = t.withIdentity({ tokenIdentifier: "user_personal" });
     // @ts-expect-error - vitest environment
     const user = await tWithIdentity.query(getUser, { tokenIdentifier: "user_personal" });
