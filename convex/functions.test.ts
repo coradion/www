@@ -13,6 +13,7 @@ describe("tasks", () => {
     await expect(t.mutation(createTask, { rawCapture: "Test task" })).rejects.toThrow("Unauthenticated call to createTask");
   });
 
+
   it("should create and list tasks", async () => {
     const modules = import.meta.glob("./**/*.*s");
     const t = convexTest(schema, modules);
@@ -42,14 +43,14 @@ describe("tasks", () => {
     const t = convexTest(schema, modules);
     
     // Action: Sync a user (first time creates it)
+    const tWithIdentitySync = t.withIdentity({ tokenIdentifier: "user_abc" });
     // @ts-expect-error - vitest environment
-    await t.mutation(syncUser, {
+    await tWithIdentitySync.mutation(syncUser, {
         tokenIdentifier: "user_abc",
         workosOrgId: "org_abc",
     });
 
     // Validation: Get user
-    // @ts-expect-error - vitest environment
     const tWithIdentity = t.withIdentity({ tokenIdentifier: "user_abc" });
     // @ts-expect-error - vitest environment
     const user = await tWithIdentity.query(getUser, { tokenIdentifier: "user_abc" });
@@ -65,14 +66,14 @@ describe("tasks", () => {
     const t = convexTest(schema, modules);
 
     // Action 1: Sync user with first org
+    const tWithIdentitySync1 = t.withIdentity({ tokenIdentifier: "user_multi_org" });
     // @ts-expect-error - vitest environment
-    await t.mutation(syncUser, {
+    await tWithIdentitySync1.mutation(syncUser, {
         tokenIdentifier: "user_multi_org",
         workosOrgId: "org_first",
     });
 
     // Validation 1: Get user and store first orgId
-    // @ts-expect-error - vitest environment
     const tWithIdentity1 = t.withIdentity({ tokenIdentifier: "user_multi_org" });
     // @ts-expect-error - vitest environment
     const user1 = await tWithIdentity1.query(getUser, { tokenIdentifier: "user_multi_org" });
@@ -81,14 +82,14 @@ describe("tasks", () => {
     expect(firstOrgId).toBeDefined();
 
     // Action 2: Sync same user with second org
+    const tWithIdentitySync2 = t.withIdentity({ tokenIdentifier: "user_multi_org" });
     // @ts-expect-error - vitest environment
-    await t.mutation(syncUser, {
+    await tWithIdentitySync2.mutation(syncUser, {
         tokenIdentifier: "user_multi_org",
         workosOrgId: "org_second",
     });
 
     // Validation 2: Get user again and verify orgId changed
-    // @ts-expect-error - vitest environment
     const tWithIdentity2 = t.withIdentity({ tokenIdentifier: "user_multi_org" });
     // @ts-expect-error - vitest environment
     const user2 = await tWithIdentity2.query(getUser, { tokenIdentifier: "user_multi_org" });
@@ -102,18 +103,36 @@ describe("tasks", () => {
     const t = convexTest(schema, modules);
 
     // Action: Sync a user without workosOrgId
+    const tWithIdentitySync = t.withIdentity({ tokenIdentifier: "user_personal" });
     // @ts-expect-error - vitest environment
-    await t.mutation(syncUser, {
+    await tWithIdentitySync.mutation(syncUser, {
         tokenIdentifier: "user_personal",
     });
 
     // Validation: Get user
-    // @ts-expect-error - vitest environment
     const tWithIdentity = t.withIdentity({ tokenIdentifier: "user_personal" });
     // @ts-expect-error - vitest environment
     const user = await tWithIdentity.query(getUser, { tokenIdentifier: "user_personal" });
     expect(user).not.toBeNull();
     expect(user?.tokenIdentifier).toBe("user_personal");
     expect(user?.orgId).toBeDefined();
+  });
+  it("should throw an error when syncing a user unauthenticated", async () => {
+    const modules = import.meta.glob("./**/*.*s");
+    const t = convexTest(schema, modules);
+
+    // Action: Sync a user without identity
+    // @ts-expect-error - vitest environment
+    await expect(t.mutation(syncUser, { tokenIdentifier: "user_unauth" })).rejects.toThrow("Unauthenticated call to syncUser");
+  });
+
+  it("should throw an error when syncing a user with mismatched tokenIdentifier", async () => {
+    const modules = import.meta.glob("./**/*.*s");
+    const t = convexTest(schema, modules);
+
+    // Action: Sync a user with different tokenIdentifier than identity
+    const tWithIdentity = t.withIdentity({ tokenIdentifier: "user_authorized" });
+    // @ts-expect-error - vitest environment
+    await expect(tWithIdentity.mutation(syncUser, { tokenIdentifier: "user_other" })).rejects.toThrow("Unauthorized to sync this user");
   });
 });

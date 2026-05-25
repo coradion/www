@@ -78,6 +78,14 @@ export const testSetupUser = internalMutation({
 export const syncUser = mutation({
   args: { tokenIdentifier: v.string(), workosOrgId: v.optional(v.string()) },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Unauthenticated call to syncUser");
+    }
+    if (identity.tokenIdentifier !== args.tokenIdentifier) {
+      throw new Error("Unauthorized to sync this user");
+    }
+
     const orgIdToUse = args.workosOrgId ?? args.tokenIdentifier;
 
     let org = await ctx.db
