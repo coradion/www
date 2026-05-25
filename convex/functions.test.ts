@@ -11,6 +11,7 @@ import {
   completeTask,
 } from "./functions";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function setupUserAndOrg(t: any, userId: string, orgIdStr: string) {
   // @ts-expect-error - vitest environment
   const orgId = await t.mutation(testSetupOrg, {
@@ -153,7 +154,7 @@ describe("tasks", () => {
     const t = convexTest(schema, modules);
 
     // Setup: Create an org, user, and task
-    const orgId = await setupUserAndOrg(t, "user_123", "org_123");
+    await setupUserAndOrg(t, "user_123", "org_123");
 
     const tWithIdentity = t.withIdentity({ tokenIdentifier: "user_123" });
     // @ts-expect-error - vitest environment
@@ -169,10 +170,10 @@ describe("tasks", () => {
     const t = convexTest(schema, modules);
 
     // Setup: Create org 1 and user 1
-    const orgId1 = await setupUserAndOrg(t, "user_1", "org_1");
+    await setupUserAndOrg(t, "user_1", "org_1");
 
     // Setup: Create org 2 and user 2
-    const orgId2 = await setupUserAndOrg(t, "user_2", "org_2");
+    await setupUserAndOrg(t, "user_2", "org_2");
 
     // User 1 creates a task
     const tWithIdentity1 = t.withIdentity({ tokenIdentifier: "user_1" });
