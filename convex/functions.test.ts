@@ -1,4 +1,3 @@
-import { api } from "./_generated/api";
 import { describe, it, expect } from "vitest";
 import { convexTest } from "convex-test";
 import schema from "./schema";
@@ -17,8 +16,9 @@ describe("tasks", () => {
     const t = convexTest(schema, modules);
 
     // Action: Create a task without identity
+    // @ts-expect-error - vitest environment
     await expect(
-      t.mutation(api.functions.createTask, { rawCapture: "Test task" }),
+      t.mutation(createTask, { rawCapture: "Test task" }),
     ).rejects.toThrow("Unauthenticated call to createTask");
   });
 
@@ -90,6 +90,7 @@ describe("tasks", () => {
     });
 
     // Validation 1: Get user and store first orgId
+
     const tWithIdentity1 = t.withIdentity({
       tokenIdentifier: "user_multi_org",
     });
@@ -109,6 +110,7 @@ describe("tasks", () => {
     });
 
     // Validation 2: Get user again and verify orgId changed
+
     const tWithIdentity2 = t.withIdentity({
       tokenIdentifier: "user_multi_org",
     });
