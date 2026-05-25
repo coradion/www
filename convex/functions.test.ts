@@ -11,6 +11,21 @@ import {
   completeTask,
 } from "./functions";
 
+async function setupUserAndOrg(t: any, userId: string, orgIdStr: string) {
+  // @ts-expect-error - vitest environment
+  const orgId = await t.mutation(testSetupOrg, {
+    workosOrgId: orgIdStr,
+    billingTier: "pro",
+  });
+  // @ts-expect-error - vitest environment
+  await t.mutation(testSetupUser, {
+    tokenIdentifier: userId,
+    orgId,
+    role: "admin",
+  });
+  return orgId;
+}
+
 describe("tasks", () => {
   it("should throw an error when creating a task unauthenticated", async () => {
     const modules = import.meta.glob("./**/*.*s");
@@ -29,18 +44,8 @@ describe("tasks", () => {
     const t = convexTest(schema, modules);
 
     // Setup: Create a test organization and user
-    // @ts-expect-error - vitest environment
-    const orgId = await t.mutation(testSetupOrg, {
-      workosOrgId: "org_123",
-      billingTier: "pro",
-    });
+    const orgId = await setupUserAndOrg(t, "user_123", "org_123");
     const userAuth = t.withIdentity({ tokenIdentifier: "user_123" });
-    // @ts-expect-error - vitest environment
-    await t.mutation(testSetupUser, {
-      tokenIdentifier: "user_123",
-      orgId,
-      role: "admin",
-    });
 
     // Action: Create a task
     const tWithIdentity = t.withIdentity({ tokenIdentifier: "user_123" });
@@ -148,10 +153,7 @@ describe("tasks", () => {
     const t = convexTest(schema, modules);
 
     // Setup: Create an org, user, and task
-    // @ts-expect-error - vitest environment
-    const orgId = await t.mutation(testSetupOrg, { workosOrgId: "org_123", billingTier: "pro" });
-    // @ts-expect-error - vitest environment
-    await t.mutation(testSetupUser, { tokenIdentifier: "user_123", orgId, role: "admin" });
+    const orgId = await setupUserAndOrg(t, "user_123", "org_123");
 
     const tWithIdentity = t.withIdentity({ tokenIdentifier: "user_123" });
     // @ts-expect-error - vitest environment
@@ -167,16 +169,10 @@ describe("tasks", () => {
     const t = convexTest(schema, modules);
 
     // Setup: Create org 1 and user 1
-    // @ts-expect-error - vitest environment
-    const orgId1 = await t.mutation(testSetupOrg, { workosOrgId: "org_1", billingTier: "pro" });
-    // @ts-expect-error - vitest environment
-    await t.mutation(testSetupUser, { tokenIdentifier: "user_1", orgId: orgId1, role: "admin" });
+    const orgId1 = await setupUserAndOrg(t, "user_1", "org_1");
 
     // Setup: Create org 2 and user 2
-    // @ts-expect-error - vitest environment
-    const orgId2 = await t.mutation(testSetupOrg, { workosOrgId: "org_2", billingTier: "pro" });
-    // @ts-expect-error - vitest environment
-    await t.mutation(testSetupUser, { tokenIdentifier: "user_2", orgId: orgId2, role: "admin" });
+    const orgId2 = await setupUserAndOrg(t, "user_2", "org_2");
 
     // User 1 creates a task
     const tWithIdentity1 = t.withIdentity({ tokenIdentifier: "user_1" });
@@ -194,10 +190,7 @@ describe("tasks", () => {
     const t = convexTest(schema, modules);
 
     // Setup: Create an org, user, and task
-    // @ts-expect-error - vitest environment
-    const orgId = await t.mutation(testSetupOrg, { workosOrgId: "org_123", billingTier: "pro" });
-    // @ts-expect-error - vitest environment
-    await t.mutation(testSetupUser, { tokenIdentifier: "user_123", orgId, role: "admin" });
+    const orgId = await setupUserAndOrg(t, "user_123", "org_123");
 
     const tWithIdentity = t.withIdentity({ tokenIdentifier: "user_123" });
     // @ts-expect-error - vitest environment
