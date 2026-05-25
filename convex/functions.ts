@@ -1,18 +1,32 @@
-import { query, mutation, internalMutation } from "./_generated/server";
+import { query, mutation, internalMutation, QueryCtx, MutationCtx } from "./_generated/server";
 import { v } from "convex/values";
+
+async function enforceUser(
+  ctx: QueryCtx | MutationCtx,
+  errorMessage: string = "Unauthenticated",
+) {
+  const identity = await ctx.auth.getUserIdentity();
+  if (!identity) {
+    throw new Error(errorMessage);
+  }
+
+  const user = await ctx.db
+    .query("users")
+    .withIndex("by_tokenIdentifier", (q) => q.eq("tokenIdentifier", identity.tokenIdentifier))
+    .unique();
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  return user;
+}
 
 export const listTasks = query({
   args: { orgId: v.id("organizations") },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new Error("Unauthenticated");
-    }
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_tokenIdentifier", (q) => q.eq("tokenIdentifier", identity.tokenIdentifier))
-      .unique();
-    if (!user || user.orgId !== args.orgId) {
+    const user = await enforceUser(ctx, "Unauthenticated");
+    if (user.orgId !== args.orgId) {
       throw new Error("Unauthorized");
     }
     return await ctx.db
@@ -27,19 +41,7 @@ export const createTask = mutation({
     rawCapture: v.string(),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new Error("Unauthenticated call to createTask");
-    }
-
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_tokenIdentifier", (q) => q.eq("tokenIdentifier", identity.tokenIdentifier))
-      .unique();
-
-    if (!user) {
-      throw new Error("User not found");
-    }
+    const user = await enforceUser(ctx, "Unauthenticated call to createTask");
 
     const taskId = await ctx.db.insert("tasks", {
       orgId: user.orgId,
@@ -136,6 +138,17 @@ export const getUser = query({
 export const completeTask = mutation({
   args: { taskId: v.id("tasks") },
   handler: async (ctx, args) => {
+    const user = await enforceUser(ctx, "Unauthenticated call to completeTask");
+
+    const task = await ctx.db.get(args.taskId);
+    if (!task) {
+      throw new Error("Task not found");
+    }
+
+    if (task.orgId !== user.orgId) {
+      throw new Error("Unauthorized to access this task");
+    }
+
     return await ctx.db.patch(args.taskId, { status: "completed" });
   },
 });
