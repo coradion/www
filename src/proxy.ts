@@ -1,7 +1,7 @@
 import { authkitProxy } from '@workos-inc/authkit-nextjs';
 
 export default authkitProxy({
-  redirectUri: process.env.WORKOS_REDIRECT_URI || 'http://localhost:3000/api/auth/callback',
+  redirectUri: process.env.WORKOS_REDIRECT_URI || 'http://localhost:3000/auth/callback',
   middlewareAuth: {
     enabled: true,
     unauthenticatedPaths: ['/', '/sign-in', '/sign-up'],
