@@ -18,13 +18,13 @@ function initTest() {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function fetchUser(t: any, userId: string) {
-  const tWithIdentity = t.withIdentity({ tokenIdentifier: userId });
+  const tWithIdentity = t.withIdentity({ tokenIdentifier: userId, subject: userId });
   return await tWithIdentity.query(getUser, { tokenIdentifier: userId });
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function captureTask(t: any, userId: string, rawCapture: string) {
-  const tWithIdentity = t.withIdentity({ tokenIdentifier: userId });
+  const tWithIdentity = t.withIdentity({ tokenIdentifier: userId, subject: userId });
   return await tWithIdentity.mutation(createTask, { rawCapture });
 }
 
@@ -44,7 +44,7 @@ async function setupUserAndOrg(t: any, userId: string, orgIdStr: string) {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function performSyncUser(t: any, userId: string, workosOrgId?: string) {
-  const tWithIdentity = t.withIdentity({ tokenIdentifier: userId });
+  const tWithIdentity = t.withIdentity({ tokenIdentifier: userId, subject: userId });
   return await tWithIdentity.mutation(syncUser, {
     tokenIdentifier: userId,
     workosOrgId,
@@ -73,7 +73,7 @@ describe("tasks", () => {
     await captureTask(t, "user_123", "Test task");
 
     // Validation: List tasks
-    const tWithIdentity = t.withIdentity({ tokenIdentifier: "user_123" });
+    const tWithIdentity = t.withIdentity({ tokenIdentifier: "user_123", subject: "user_123" });
     // @ts-expect-error - vitest environment
     const tasks = await tWithIdentity.query(listTasks, { orgId });
     expect(tasks).toHaveLength(1);
@@ -143,7 +143,7 @@ describe("tasks", () => {
     const t = initTest();
 
     // Action: Sync a user with different tokenIdentifier than identity
-    const tWithIdentity = t.withIdentity({ tokenIdentifier: "user_authorized" });
+    const tWithIdentity = t.withIdentity({ tokenIdentifier: "user_authorized", subject: "user_authorized" });
     // @ts-expect-error - vitest environment
     await expect(tWithIdentity.mutation(syncUser, { tokenIdentifier: "user_other" })).rejects.toThrow("Unauthorized to sync this user");
   });
@@ -173,7 +173,7 @@ describe("tasks", () => {
     const taskId = await captureTask(t, "user_1", "Test task org 1");
 
     // Action: User 2 tries to complete User 1's task
-    const tWithIdentity2 = t.withIdentity({ tokenIdentifier: "user_2" });
+    const tWithIdentity2 = t.withIdentity({ tokenIdentifier: "user_2", subject: "user_2" });
     // @ts-expect-error - vitest environment
     await expect(tWithIdentity2.mutation(completeTask, { taskId })).rejects.toThrow("Unauthorized to access this task");
   });
@@ -186,7 +186,7 @@ describe("tasks", () => {
     const taskId = await captureTask(t, "user_123", "Test task");
 
     // Action: Complete the task
-    const tWithIdentity = t.withIdentity({ tokenIdentifier: "user_123" });
+    const tWithIdentity = t.withIdentity({ tokenIdentifier: "user_123", subject: "user_123" });
     // @ts-expect-error - vitest environment
     await tWithIdentity.mutation(completeTask, { taskId });
 
@@ -211,7 +211,7 @@ describe("tasks", () => {
     await setupUserAndOrg(t, "user_nonexistent", "org_nonexistent");
 
     // Action: Try to complete a task that doesn't exist using a syntactically valid ID format
-    const tWithIdentity = t.withIdentity({ tokenIdentifier: "user_nonexistent" });
+    const tWithIdentity = t.withIdentity({ tokenIdentifier: "user_nonexistent", subject: "user_nonexistent" });
     const fakeId = "jd10wtp2eb15a2h7z1s7c0b050m7";
     // @ts-expect-error - vitest environment
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
