@@ -12,7 +12,7 @@ async function enforceUser(
 
   const user = await ctx.db
     .query("users")
-    .withIndex("by_tokenIdentifier", (q) => q.eq("tokenIdentifier", identity.tokenIdentifier))
+    .withIndex("by_tokenIdentifier", (q) => q.eq("tokenIdentifier", identity.subject))
     .unique();
 
   if (!user) {
@@ -85,7 +85,7 @@ export const syncUser = mutation({
     if (!identity) {
       throw new Error("Unauthenticated call to syncUser");
     }
-    if (identity.tokenIdentifier !== args.tokenIdentifier) {
+    if (identity.subject !== args.tokenIdentifier) {
       throw new Error("Unauthorized to sync this user");
     }
 
@@ -133,7 +133,7 @@ export const getUser = query({
     if (!identity) {
       throw new Error("Unauthenticated call to getUser");
     }
-    if (identity.tokenIdentifier !== args.tokenIdentifier) {
+    if (identity.subject !== args.tokenIdentifier) {
       throw new Error("Unauthorized to access this user");
     }
 
