@@ -57,7 +57,7 @@ describe("Home Page", () => {
     // Create a minimal wrapper if needed or just render directly since hooks are mocked
     render(<Home />);
     
-    expect(screen.getByText(/Eudemonic Tasks/i)).toBeInTheDocument();
+    expect(screen.getByText(/Coradion/i)).toBeInTheDocument();
     expect(consoleSpy).not.toHaveBeenCalled();
     
     consoleSpy.mockRestore();

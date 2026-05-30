@@ -22,9 +22,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${splineSans.variable} h-full antialiased`}
+      className={`${splineSans.variable} h-full antialiased dark`}
     >
-      <body className="min-h-full flex flex-col font-sans">
+      <body className="min-h-full flex flex-col font-body-standard text-body-standard leading-relaxed">
         <ConvexClientProvider>
           {children}
         </ConvexClientProvider>

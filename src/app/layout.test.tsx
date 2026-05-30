@@ -51,7 +51,7 @@ describe("RootLayout", () => {
     // The child of <html> should be <body>
     const body = element.props.children;
     expect(body.type).toBe("body");
-    expect(body.props.className).toContain("min-h-full flex flex-col font-sans");
+    expect(body.props.className).toContain("min-h-full flex flex-col font-body-standard text-body-standard leading-relaxed");
 
     consoleError.mockRestore();
   });
