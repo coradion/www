@@ -1,12 +1,13 @@
 "use client";
 
-import { Check } from "lucide-react";
+import { Check, User } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useMutation, useQuery, useConvexAuth } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
 import { useAuth } from "@workos-inc/authkit-nextjs/components";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Home() {
   const [captureText, setCaptureText] = useState("");
@@ -86,14 +87,29 @@ export default function Home() {
               Aligning effort with your neurobiology.
             </p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
             {authUser ? (
-              <button
-                onClick={() => signOut()}
-                className="text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
-              >
-                Sign out
-              </button>
+              <>
+                <div className="flex items-center justify-center w-8 h-8 rounded-full overflow-hidden bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700">
+                  {authUser.profilePictureUrl ? (
+                    <Image
+                      src={authUser.profilePictureUrl}
+                      alt="Profile picture"
+                      width={32}
+                      height={32}
+                      className="object-cover"
+                    />
+                  ) : (
+                    <User className="w-5 h-5 text-zinc-500 dark:text-zinc-400" />
+                  )}
+                </div>
+                <button
+                  onClick={() => signOut()}
+                  className="text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
+                >
+                  Sign out
+                </button>
+              </>
             ) : (
               <>
                 <Link
