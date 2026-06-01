@@ -13,7 +13,7 @@ export default function Home() {
   const [captureText, setCaptureText] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { user: authUser, signOut } = useAuth();
+  const { user: authUser, organizationId, signOut } = useAuth();
   const { isAuthenticated } = useConvexAuth();
 
   const syncUser = useMutation(api.functions.syncUser);
@@ -34,11 +34,10 @@ export default function Home() {
       // Create/sync user if they are logged in but don't exist in our db yet
       syncUser({
         tokenIdentifier: authUser.id,
-        // @ts-expect-error - missing orgId from typing
-        workosOrgId: authUser.organizationId || undefined,
+        workosOrgId: organizationId || undefined,
       }).catch(console.error);
     }
-  }, [user, authUser, syncUser]);
+  }, [user, authUser, syncUser, organizationId]);
 
   const createTask = useMutation(api.functions.createTask);
   const completeTask = useMutation(api.functions.completeTask);
