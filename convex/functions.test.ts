@@ -210,4 +210,19 @@ describe("tasks", () => {
     const tWithIdentity2 = t.withIdentity({ tokenIdentifier: "user_2", subject: "user_2" });
     await expect(tWithIdentity2.query(api.functions.listTasks, { orgId: orgId1 })).rejects.toThrow("Unauthorized");
   });
+
+  it("should throw an error when getting a user unauthenticated", async () => {
+    const t = initTest();
+
+    // Action: Get a user without identity
+    await expect(t.query(api.functions.getUser, { tokenIdentifier: "user_unauth" })).rejects.toThrow("Unauthenticated call to getUser");
+  });
+
+  it("should throw an error when getting a different user's profile", async () => {
+    const t = initTest();
+
+    // Action: Get a user with different tokenIdentifier than identity
+    const tWithIdentity = t.withIdentity({ tokenIdentifier: "user_actual", subject: "user_actual" });
+    await expect(tWithIdentity.query(api.functions.getUser, { tokenIdentifier: "user_other" })).rejects.toThrow("Unauthorized to access this user");
+  });
 });
