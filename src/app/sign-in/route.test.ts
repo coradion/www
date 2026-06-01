@@ -19,8 +19,7 @@ describe('Sign In API Route', () => {
   it('should redirect to the sign in url on success', async () => {
     const mockUrl = 'https://example.com/sign-in';
     vi.mocked(getSignInUrl).mockResolvedValue(mockUrl);
-    // @ts-expect-error - vitest environment mocking redirect response
-    vi.mocked(redirect).mockReturnValue('mock-redirect-response');
+    vi.mocked(redirect).mockReturnValue('mock-redirect-response' as never);
 
     const response = await GET();
 
