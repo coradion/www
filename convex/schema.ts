@@ -22,5 +22,6 @@ export default defineSchema({
     bentoSize: v.string(), // "large", "medium", "small"
     energyRequired: v.number(), // estimated metabolic cost
   }).index("by_userId", ["userId"])
-    .index("by_orgId", ["orgId"]),
+    .index("by_orgId", ["orgId"])
+    .index("by_orgId_status", ["orgId", "status"]),
 });
