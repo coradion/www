@@ -91,10 +91,19 @@ export const syncUser = mutation({
 
     const orgIdToUse = args.workosOrgId ?? args.tokenIdentifier;
 
-    let org = await ctx.db
-      .query("organizations")
-      .withIndex("by_workosOrgId", (q) => q.eq("workosOrgId", orgIdToUse))
-      .unique();
+    let org;
+    const [fetchedOrg, user] = await Promise.all([
+      ctx.db
+        .query("organizations")
+        .withIndex("by_workosOrgId", (q) => q.eq("workosOrgId", orgIdToUse))
+        .unique(),
+      ctx.db
+        .query("users")
+        .withIndex("by_tokenIdentifier", (q) => q.eq("tokenIdentifier", args.tokenIdentifier))
+        .unique(),
+    ]);
+
+    org = fetchedOrg;
 
     if (!org) {
       const orgId = await ctx.db.insert("organizations", {
@@ -108,11 +117,6 @@ export const syncUser = mutation({
         billingTier: "free",
       };
     }
-
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_tokenIdentifier", (q) => q.eq("tokenIdentifier", args.tokenIdentifier))
-      .unique();
 
     if (!user) {
       await ctx.db.insert("users", {
