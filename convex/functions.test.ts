@@ -196,4 +196,18 @@ describe("tasks", () => {
     const fakeId = "jd10wtp2eb15a2h7z1s7c0b050m7";
     await expect(tWithIdentity.mutation(api.functions.completeTask, { taskId: fakeId as Id<"tasks"> })).rejects.toThrow("Validator error: Expected ID for table");
   });
+
+  it("should throw an error when listing tasks from a different org", async () => {
+    const t = initTest();
+
+    // Setup: Create org 1 and user 1
+    const orgId1 = await setupUserAndOrg(t, "user_1", "org_1");
+
+    // Setup: Create org 2 and user 2
+    await setupUserAndOrg(t, "user_2", "org_2");
+
+    // Action: User 2 tries to list User 1's tasks
+    const tWithIdentity2 = t.withIdentity({ tokenIdentifier: "user_2", subject: "user_2" });
+    await expect(tWithIdentity2.query(api.functions.listTasks, { orgId: orgId1 })).rejects.toThrow("Unauthorized");
+  });
 });
