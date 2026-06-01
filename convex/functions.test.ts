@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { convexTest } from "convex-test";
+import { Id } from "./_generated/dataModel";
 import schema from "./schema";
 import {
   listTasks,
@@ -214,7 +215,6 @@ describe("tasks", () => {
     const tWithIdentity = t.withIdentity({ tokenIdentifier: "user_nonexistent", subject: "user_nonexistent" });
     const fakeId = "jd10wtp2eb15a2h7z1s7c0b050m7";
     // @ts-expect-error - vitest environment
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    await expect(tWithIdentity.mutation(completeTask, { taskId: fakeId as any })).rejects.toThrow("Task not found");
+    await expect(tWithIdentity.mutation(completeTask, { taskId: fakeId as Id<"tasks"> })).rejects.toThrow("Task not found");
   });
 });
