@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, User } from "lucide-react";
+import { Check, User, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useMutation, useQuery, useConvexAuth } from "convex/react";
 import { api } from "../../convex/_generated/api";
@@ -12,6 +12,7 @@ import Image from "next/image";
 export default function Home() {
   const [captureText, setCaptureText] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const { user: authUser, organizationId, signOut } = useAuth();
   const { isAuthenticated } = useConvexAuth();
@@ -35,7 +36,7 @@ export default function Home() {
       syncUser({
         tokenIdentifier: authUser.id,
         workosOrgId: organizationId || undefined,
-      }).catch(console.error);
+      }).catch(() => setError("Failed to sync user profile. Please try refreshing."));
     }
   }, [user, authUser, syncUser, organizationId]);
 
@@ -53,8 +54,8 @@ export default function Home() {
         });
         setCaptureText("");
       }
-    } catch (error) {
-      console.error("Failed to create task", error);
+    } catch {
+      setError("Failed to create task");
     } finally {
       setIsSubmitting(false);
     }
@@ -63,8 +64,8 @@ export default function Home() {
   const handleComplete = async (taskId: Id<"tasks">) => {
     try {
       await completeTask({ taskId });
-    } catch (error) {
-      console.error("Failed to complete task", error);
+    } catch {
+      setError("Failed to complete task");
     }
   };
 
@@ -127,6 +128,19 @@ export default function Home() {
             )}
           </div>
         </header>
+
+        {error && (
+          <div className="flex items-center justify-between bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-4 rounded-xl border border-red-200 dark:border-red-900/50">
+            <span className="text-sm font-medium">{error}</span>
+            <button
+              onClick={() => setError(null)}
+              className="p-1 hover:bg-red-100 dark:hover:bg-red-900/40 rounded-lg transition-colors"
+              aria-label="Dismiss error"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        )}
 
         <section className="bg-white dark:bg-zinc-900 rounded-2xl p-6 shadow-sm border border-zinc-200 dark:border-zinc-800">
           <div className="flex flex-col gap-4">
