@@ -35,7 +35,7 @@ export default function Home() {
       // Create/sync user if they are logged in but don't exist in our db yet
       syncUser({
         tokenIdentifier: authUser.id,
-        workosOrgId: organizationId || undefined,
+        workosOrgId: organizationId || "",
       }).catch(() => setError("Failed to sync user profile. Please try refreshing."));
     }
   }, [user, authUser, syncUser, organizationId]);

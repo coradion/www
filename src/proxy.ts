@@ -1,11 +1,7 @@
-import { authkitProxy } from '@workos-inc/authkit-nextjs';
+import { authkitMiddleware } from '@workos-inc/authkit-nextjs';
 
-export default authkitProxy({
-  redirectUri: process.env.WORKOS_REDIRECT_URI || 'http://localhost:3000/auth/callback',
-  middlewareAuth: {
-    enabled: true,
-    unauthenticatedPaths: ['/', '/sign-in', '/sign-up'],
-  },
+export default authkitMiddleware({
+  redirectUri: process.env.WORKOS_REDIRECT_URI || 'http://localhost:3000/api/auth/callback',
 });
 
 export const config = { matcher: ['/', '/((?!_next/static|_next/image|favicon.ico).*)'] };
