@@ -13,6 +13,7 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@convex-dev/workos-authkit": "^0.2.6",
     "@tsconfig/next": "^2.0.6",
     "@workos-inc/authkit-nextjs": "^4.1.1",
     "convex": "^1.40.0",
