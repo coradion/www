@@ -1,0 +1,5 @@
+🎯 What: Added length validation to the `rawCapture` field in the `createTask` mutation in `convex/functions.ts`. A new test is added in `convex/functions.test.ts` to assert the length constraint.
+
+⚠️ Risk: The absence of string length validation for raw text insertion exposes the system to Denial of Service (DoS) and potential storage exhaustion. An attacker could flood the system with excessively large strings, consuming resources, degrading system performance, or artificially inflating database storage costs.
+
+🛡️ Solution: A length check was implemented natively inside the `createTask` mutation handler because `v.string()` does not support built-in bounds. Any `rawCapture` input exceeding 4096 characters triggers a `ConvexError`, preventing the record from being stored.

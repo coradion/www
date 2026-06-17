@@ -54,6 +54,21 @@ describe("tasks", () => {
     );
   });
 
+  it("should throw an error when rawCapture exceeds the maximum length", async () => {
+    const t = initTest();
+
+    // Setup: Create an org and user
+    await setupUserAndOrg(t, "user_length", "org_length");
+
+    // Action: Create a task with a massive rawCapture string
+    const longString = "a".repeat(4097);
+    const tWithIdentity = t.withIdentity({ tokenIdentifier: "user_length", subject: "user_length" });
+    const promise = tWithIdentity.mutation(api.functions.createTask, { rawCapture: longString });
+
+    // Validation: Check that it throws an error
+    await expect(promise).rejects.toThrow("rawCapture exceeds maximum length of 4096 characters");
+  });
+
   it("should create and list tasks", async () => {
     const t = initTest();
 
