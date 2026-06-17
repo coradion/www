@@ -80,10 +80,10 @@ describe("tasks", () => {
 
     // Validation: List tasks
     const tWithIdentity = t.withIdentity({ tokenIdentifier: "user_123", subject: "user_123" });
-    const tasks = await tWithIdentity.query(api.functions.listTasks, { orgId });
-    expect(tasks).toHaveLength(1);
-    expect(tasks[0].rawCapture).toBe("Test task");
-    expect(tasks[0].status).toBe("active");
+    const tasks = await tWithIdentity.query(api.functions.listTasks, { orgId, paginationOpts: { numItems: 10, cursor: null } });
+    expect(tasks.page).toHaveLength(1);
+    expect(tasks.page[0].rawCapture).toBe("Test task");
+    expect(tasks.page[0].status).toBe("active");
   });
 
   it("should sync and get user identity", async () => {
@@ -191,9 +191,9 @@ describe("tasks", () => {
     await tWithIdentity.mutation(api.functions.completeTask, { taskId });
 
     // Validation: Check task status
-    const tasks = await tWithIdentity.query(api.functions.listTasks, { orgId });
+    const tasks = await tWithIdentity.query(api.functions.listTasks, { orgId, paginationOpts: { numItems: 10, cursor: null } });
     // listTasks only returns active tasks now, so it should be empty
-    expect(tasks).toHaveLength(0);
+    expect(tasks.page).toHaveLength(0);
 
     // Verify the task was actually completed by querying the DB directly
     await t.run(async (ctx) => {
@@ -226,7 +226,7 @@ describe("tasks", () => {
 
     // Action: User 2 tries to list User 1's tasks
     const tWithIdentity2 = t.withIdentity({ tokenIdentifier: "user_2", subject: "user_2" });
-    await expect(tWithIdentity2.query(api.functions.listTasks, { orgId: orgId1 })).rejects.toThrow("Unauthorized");
+    await expect(tWithIdentity2.query(api.functions.listTasks, { orgId: orgId1, paginationOpts: { numItems: 10, cursor: null } })).rejects.toThrow("Unauthorized");
   });
 
   it("should throw an error when getting a user unauthenticated", async () => {
