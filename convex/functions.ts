@@ -1,5 +1,5 @@
 import { query, mutation, QueryCtx, MutationCtx } from "./_generated/server";
-import { v } from "convex/values";
+import { v, ConvexError } from "convex/values";
 
 async function enforceUser(
   ctx: QueryCtx | MutationCtx,
@@ -43,6 +43,10 @@ export const createTask = mutation({
     rawCapture: v.string(),
   },
   handler: async (ctx, args) => {
+    if (args.rawCapture.length > 4096) {
+      throw new ConvexError("rawCapture exceeds maximum length of 4096 characters");
+    }
+
     const user = await enforceUser(ctx, "Unauthenticated call to createTask");
 
     const taskId = await ctx.db.insert("tasks", {
