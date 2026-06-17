@@ -1,4 +1,5 @@
 import { query, mutation, QueryCtx, MutationCtx } from "./_generated/server";
+import { paginationOptsValidator } from "convex/server";
 import { v, ConvexError } from "convex/values";
 
 async function enforceUser(
@@ -23,7 +24,7 @@ async function enforceUser(
 }
 
 export const listTasks = query({
-  args: { orgId: v.id("organizations") },
+  args: { orgId: v.id("organizations"), paginationOpts: paginationOptsValidator },
   handler: async (ctx, args) => {
     const user = await enforceUser(ctx, "Unauthenticated");
     if (user.orgId !== args.orgId) {
@@ -34,7 +35,7 @@ export const listTasks = query({
       .withIndex("by_orgId_status", (q) =>
         q.eq("orgId", args.orgId).eq("status", "active")
       )
-      .collect();
+      .paginate(args.paginationOpts);
   },
 });
 

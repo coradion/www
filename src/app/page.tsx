@@ -2,7 +2,7 @@
 
 import { Check, User, X } from "lucide-react";
 import { useState, useEffect } from "react";
-import { useMutation, useQuery, useConvexAuth } from "convex/react";
+import { useMutation, useQuery, usePaginatedQuery, useConvexAuth } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
 import { useAuth } from "@workos-inc/authkit-nextjs/components";
@@ -24,9 +24,10 @@ export default function Home() {
   );
 
   // Query active tasks
-  const tasks = useQuery(
+  const { results: tasks } = usePaginatedQuery(
     api.functions.listTasks,
     user && isAuthenticated ? { orgId: user.orgId } : "skip",
+    { initialNumItems: 10 }
   );
   const activeTasks = tasks ?? [];
 

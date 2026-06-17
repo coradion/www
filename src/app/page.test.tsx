@@ -33,6 +33,9 @@ vi.mock("convex/react", async (importOriginal) => {
   const actual = await importOriginal() as Record<string, unknown>;
   return {
     ...actual,
+    usePaginatedQuery: vi.fn((query) => {
+      return { results: [], status: "Exhausted", loadMore: vi.fn() };
+    }),
     useQuery: vi.fn((query) => {
       try {
          // Try to return an array if the query isn't getUser
