@@ -1,4 +1,4 @@
-import { query, mutation, internalMutation, QueryCtx, MutationCtx } from "./_generated/server";
+import { query, mutation, QueryCtx, MutationCtx } from "./_generated/server";
 import { v } from "convex/values";
 
 async function enforceUser(
@@ -55,27 +55,6 @@ export const createTask = mutation({
       energyRequired: 5,
     });
     return taskId;
-  },
-});
-
-export const testSetupOrg = internalMutation({
-  args: { workosOrgId: v.string(), billingTier: v.string() },
-  handler: async (ctx, args) => {
-    return await ctx.db.insert("organizations", {
-      workosOrgId: args.workosOrgId,
-      billingTier: args.billingTier,
-    });
-  },
-});
-
-export const testSetupUser = internalMutation({
-  args: { tokenIdentifier: v.string(), orgId: v.id("organizations"), role: v.string() },
-  handler: async (ctx, args) => {
-    return await ctx.db.insert("users", {
-      tokenIdentifier: args.tokenIdentifier,
-      orgId: args.orgId,
-      role: args.role,
-    });
   },
 });
 

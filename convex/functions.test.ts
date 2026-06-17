@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { convexTest } from "convex-test";
 import { Id } from "./_generated/dataModel";
 import schema from "./schema";
-import { api, internal } from "./_generated/api";
+import { api } from "./_generated/api";
 
 function initTest() {
   const modules = import.meta.glob("./**/*.*s");
@@ -20,14 +20,17 @@ async function captureTask(t: ReturnType<typeof initTest>, userId: string, rawCa
 }
 
 async function setupUserAndOrg(t: ReturnType<typeof initTest>, userId: string, orgIdStr: string) {
-  const orgId = await t.mutation(internal.functions.testSetupOrg, {
-    workosOrgId: orgIdStr,
-    billingTier: "pro",
-  });
-  await t.mutation(internal.functions.testSetupUser, {
-    tokenIdentifier: userId,
-    orgId,
-    role: "admin",
+  const orgId = await t.run(async (ctx) => {
+    const id = await ctx.db.insert("organizations", {
+      workosOrgId: orgIdStr,
+      billingTier: "pro",
+    });
+    await ctx.db.insert("users", {
+      tokenIdentifier: userId,
+      orgId: id,
+      role: "admin",
+    });
+    return id;
   });
   return orgId;
 }
