@@ -64,7 +64,7 @@ export const createTask = mutation({
 });
 
 export const syncUser = mutation({
-  args: { tokenIdentifier: v.string(), workosOrgId: v.optional(v.string()) },
+  args: { tokenIdentifier: v.string() },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
@@ -74,7 +74,8 @@ export const syncUser = mutation({
       throw new Error("Unauthorized to sync this user");
     }
 
-    const orgIdToUse = args.workosOrgId ?? args.tokenIdentifier;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const orgIdToUse = (identity as any).org_id ?? args.tokenIdentifier;
 
     let org;
     const [fetchedOrg, user] = await Promise.all([
