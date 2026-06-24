@@ -36,10 +36,10 @@ async function setupUserAndOrg(t: ReturnType<typeof initTest>, userId: string, o
 }
 
 async function performSyncUser(t: ReturnType<typeof initTest>, userId: string, workosOrgId?: string) {
-  const tWithIdentity = t.withIdentity({ tokenIdentifier: userId, subject: userId });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const tWithIdentity = t.withIdentity({ tokenIdentifier: userId, subject: userId, org_id: workosOrgId } as any);
   return await tWithIdentity.mutation(api.functions.syncUser, {
     tokenIdentifier: userId,
-    workosOrgId,
   });
 }
 
