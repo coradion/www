@@ -1,7 +1,8 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import Home from "./page";
 import { describe, it, expect, vi } from "vitest";
 import * as authKitComponents from "@workos-inc/authkit-nextjs/components";
+import { usePaginatedQuery, useMutation } from "convex/react";
 
 vi.mock("next/image", () => ({
   default: (props: Record<string, unknown>) => {
@@ -33,10 +34,11 @@ vi.mock("convex/react", async (importOriginal) => {
   const actual = await importOriginal() as Record<string, unknown>;
   return {
     ...actual,
-    usePaginatedQuery: vi.fn((query) => {
+    usePaginatedQuery: vi.fn(() => {
       return { results: [], status: "Exhausted", loadMore: vi.fn() };
     }),
-    useQuery: vi.fn((query) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    useQuery: vi.fn((query: any) => {
       try {
          // Try to return an array if the query isn't getUser
          if (query.isRegistered && query.isRegistered === false) {
@@ -122,4 +124,40 @@ describe("Home Page", () => {
 
     consoleSpy.mockRestore();
   });
+
+  it("sets error state when completing a task fails", async () => {
+    const useAuthSpy = vi.spyOn(authKitComponents, "useAuth");
+    useAuthSpy.mockReturnValue({
+      user: { id: "user-123", email: "test@example.com" } as unknown as ReturnType<typeof authKitComponents.useAuth>,
+      organizationId: undefined,
+      signOut: vi.fn(),
+      getAuth: vi.fn() as unknown,
+      refreshAuth: vi.fn() as unknown,
+    } as unknown as ReturnType<typeof authKitComponents.useAuth>);
+
+    vi.mocked(usePaginatedQuery).mockReturnValueOnce({
+      results: [{ _id: "task-1", rawCapture: "Test task to complete" }],
+      status: "Exhausted",
+      loadMore: vi.fn()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any);
+
+    vi.mocked(useMutation).mockImplementation(() => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return vi.fn().mockRejectedValue(new Error("Failed to complete task")) as any;
+    });
+
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    render(<Home />);
+
+    const completeBtn = screen.getByLabelText("Complete task");
+    fireEvent.click(completeBtn);
+
+    await waitFor(() => {
+        expect(screen.getByText("Failed to complete task")).toBeInTheDocument();
+    });
+
+    consoleSpy.mockRestore();
+  });
+
 });
