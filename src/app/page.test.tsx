@@ -34,10 +34,11 @@ vi.mock("convex/react", async (importOriginal) => {
   const actual = await importOriginal() as Record<string, unknown>;
   return {
     ...actual,
-    usePaginatedQuery: vi.fn((query) => {
+    usePaginatedQuery: vi.fn(() => {
       return { results: [], status: "Exhausted", loadMore: vi.fn() };
     }),
-    useQuery: vi.fn((query) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    useQuery: vi.fn((query: any) => {
       try {
          // Try to return an array if the query isn't getUser
          if (query.isRegistered && query.isRegistered === false) {
@@ -138,9 +139,11 @@ describe("Home Page", () => {
       results: [{ _id: "task-1", rawCapture: "Test task to complete" }],
       status: "Exhausted",
       loadMore: vi.fn()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any);
 
-    vi.mocked(useMutation).mockImplementation((mutationFn) => {
+    vi.mocked(useMutation).mockImplementation(() => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return vi.fn().mockRejectedValue(new Error("Failed to complete task")) as any;
     });
 
