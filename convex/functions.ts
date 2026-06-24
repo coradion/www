@@ -137,9 +137,11 @@ export const getUser = query({
 export const completeTask = mutation({
   args: { taskId: v.id("tasks") },
   handler: async (ctx, args) => {
-    const user = await enforceUser(ctx, "Unauthenticated call to completeTask");
+    const [user, task] = await Promise.all([
+      enforceUser(ctx, "Unauthenticated call to completeTask"),
+      ctx.db.get(args.taskId),
+    ]);
 
-    const task = await ctx.db.get(args.taskId);
     if (!task) {
       throw new Error("Task not found");
     }
