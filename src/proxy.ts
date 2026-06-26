@@ -1,6 +1,6 @@
 import { authkitProxy } from '@workos-inc/authkit-nextjs';
 
-export default authkitProxy({
+export const proxy = authkitProxy({
   redirectUri: process.env.WORKOS_REDIRECT_URI || 'http://localhost:3000/auth/callback',
   middlewareAuth: {
     enabled: true,
