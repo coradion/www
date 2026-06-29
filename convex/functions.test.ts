@@ -54,6 +54,20 @@ describe("tasks", () => {
     );
   });
 
+  it("should throw an error when user is authenticated but not found in the database", async () => {
+    const t = initTest();
+
+    // Setup: Use an identity that doesn't correspond to any user in the db
+    const tWithIdentity = t.withIdentity({ tokenIdentifier: "nonexistent_user", subject: "nonexistent_user" });
+
+    // Action: Create a task
+    const promise = tWithIdentity.mutation(api.functions.createTask, { rawCapture: "Test task" });
+
+    // Validation: Check that it throws an error
+    await expect(promise).rejects.toThrow("User not found");
+  });
+
+
   it("should throw an error when rawCapture exceeds the maximum length", async () => {
     const t = initTest();
 
