@@ -75,7 +75,7 @@ export const syncUser = mutation({
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const orgIdToUse = (identity as any).org_id ?? args.tokenIdentifier;
+    const orgIdToUse = (identity as any).org_id ?? `personal_${identity.subject}`;
 
     let org;
     const [fetchedOrg, user] = await Promise.all([
