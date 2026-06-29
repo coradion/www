@@ -160,4 +160,35 @@ describe("Home Page", () => {
     consoleSpy.mockRestore();
   });
 
+  it("sets error state when creating a task fails", async () => {
+    const useAuthSpy = vi.spyOn(authKitComponents, "useAuth");
+    useAuthSpy.mockReturnValue({
+      user: { id: "user-123", email: "test@example.com" } as unknown as ReturnType<typeof authKitComponents.useAuth>,
+      organizationId: undefined,
+      signOut: vi.fn(),
+      getAuth: vi.fn() as unknown,
+      refreshAuth: vi.fn() as unknown,
+    } as unknown as ReturnType<typeof authKitComponents.useAuth>);
+
+    vi.mocked(useMutation).mockImplementation(() => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return vi.fn().mockRejectedValue(new Error("Failed to create task")) as any;
+    });
+
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    render(<Home />);
+
+    const input = screen.getByPlaceholderText("What's on your mind? (TEA Framework)");
+    fireEvent.change(input, { target: { value: 'New test task' } });
+
+    const captureBtn = screen.getByText("Capture");
+    fireEvent.click(captureBtn);
+
+    await waitFor(() => {
+        expect(screen.getByText("Failed to create task")).toBeInTheDocument();
+    });
+
+    consoleSpy.mockRestore();
+  });
+
 });
