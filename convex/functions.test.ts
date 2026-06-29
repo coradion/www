@@ -217,6 +217,24 @@ describe("tasks", () => {
     });
   });
 
+
+  it("should throw an error when completing a task that is not found", async () => {
+    const t = initTest();
+
+    // Setup: Create an org and user
+    await setupUserAndOrg(t, "user_not_found", "org_not_found");
+    const tWithIdentity = t.withIdentity({ tokenIdentifier: "user_not_found", subject: "user_not_found" });
+
+    // Action: Create a task and then delete it directly from the database
+    const taskId = await tWithIdentity.mutation(api.functions.createTask, { rawCapture: "Test task to delete" });
+    await t.run(async (ctx) => {
+      await ctx.db.delete(taskId);
+    });
+
+    // Validation: Try to complete the deleted task
+    await expect(tWithIdentity.mutation(api.functions.completeTask, { taskId })).rejects.toThrow("Task not found");
+  });
+
   it("should throw an error when completing a non-existent task", async () => {
     const t = initTest();
 
