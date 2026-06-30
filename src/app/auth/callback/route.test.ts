@@ -17,8 +17,7 @@ describe('Auth Callback API Route', () => {
     const mockRequest = new Request('http://localhost/auth/callback');
 
     // In WorkOS authkit nextjs, the route handler returns a function that takes a Request
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const result = await (GET as any)(mockRequest);
+    const result = await (GET as import("vitest").Mock)(mockRequest);
     expect(result).toBe('mock-response');
   });
 
@@ -28,14 +27,12 @@ describe('Auth Callback API Route', () => {
     const mockErrorHandler = vi.fn().mockRejectedValue(new Error('Auth callback failed'));
 
     // We dynamically mock it for the error test
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    vi.mocked(handleAuth).mockReturnValueOnce(mockErrorHandler as any);
+    vi.mocked(handleAuth).mockReturnValueOnce(mockErrorHandler as ReturnType<typeof handleAuth>);
 
     // Reload the module
     vi.resetModules();
     const { GET: DynamicGET } = await import('./route');
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    await expect((DynamicGET as any)(mockRequest)).rejects.toThrow('Auth callback failed');
+    await expect((DynamicGET as import("vitest").Mock)(mockRequest)).rejects.toThrow('Auth callback failed');
   });
 });
