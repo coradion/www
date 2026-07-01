@@ -74,8 +74,7 @@ export const syncUser = mutation({
       throw new Error("Unauthorized to sync this user");
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const orgIdToUse = (identity as any).org_id ?? `personal_${identity.subject}`;
+    const orgIdToUse = (identity as typeof identity & { org_id?: string }).org_id ?? `personal_${identity.subject}`;
 
     let org;
     const [fetchedOrg, user] = await Promise.all([
