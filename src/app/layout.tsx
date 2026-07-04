@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Spline_Sans } from "next/font/google";
 import "./globals.css";
+import { ConvexClientProvider } from "./ConvexClientProvider";
 
 const splineSans = Spline_Sans({
   variable: "--font-spline-sans",
@@ -11,8 +12,6 @@ export const metadata: Metadata = {
   title: "Eudemonic Task Management",
   description: "A system for human focus and well-being",
 };
-
-import { ConvexClientProvider } from "./ConvexClientProvider";
 
 export default function RootLayout({
   children,
