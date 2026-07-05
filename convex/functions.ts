@@ -76,8 +76,8 @@ export const syncUser = mutation({
 
     const orgIdToUse = (identity as typeof identity & { org_id?: string }).org_id ?? `personal_${identity.subject}`;
 
-    let org;
-    const [fetchedOrg, user] = await Promise.all([
+    // eslint-disable-next-line prefer-const
+    let [org, user] = await Promise.all([
       ctx.db
         .query("organizations")
         .withIndex("by_workosOrgId", (q) => q.eq("workosOrgId", orgIdToUse))
@@ -87,8 +87,6 @@ export const syncUser = mutation({
         .withIndex("by_tokenIdentifier", (q) => q.eq("tokenIdentifier", args.tokenIdentifier))
         .unique(),
     ]);
-
-    org = fetchedOrg;
 
     if (!org) {
       const orgId = await ctx.db.insert("organizations", {
