@@ -14,7 +14,7 @@ export default function Home() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const { user: authUser, organizationId, signOut } = useAuth();
+  const { user: authUser, signOut } = useAuth();
   const { isAuthenticated } = useConvexAuth();
 
   const syncUser = useMutation(api.functions.syncUser);
@@ -38,7 +38,7 @@ export default function Home() {
         tokenIdentifier: authUser.id,
       }).catch(() => setError("Failed to sync user profile. Please try refreshing."));
     }
-  }, [user, authUser, syncUser, organizationId]);
+  }, [user, authUser, syncUser]);
 
   const createTask = useMutation(api.functions.createTask);
   const completeTask = useMutation(api.functions.completeTask);
