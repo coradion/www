@@ -24,16 +24,13 @@ async function enforceUser(
 }
 
 export const listTasks = query({
-  args: { orgId: v.id("organizations"), paginationOpts: paginationOptsValidator },
+  args: { paginationOpts: paginationOptsValidator },
   handler: async (ctx, args) => {
     const user = await enforceUser(ctx, "Unauthenticated");
-    if (user.orgId !== args.orgId) {
-      throw new Error("Unauthorized");
-    }
     return await ctx.db
       .query("tasks")
       .withIndex("by_orgId_status", (q) =>
-        q.eq("orgId", args.orgId).eq("status", "active")
+        q.eq("orgId", user.orgId).eq("status", "active")
       )
       .paginate(args.paginationOpts);
   },

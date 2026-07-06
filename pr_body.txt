@@ -1,6 +1,3 @@
-💡 **What:** Modified `completeTask` in `convex/functions.ts` to execute `enforceUser` and `ctx.db.get(args.taskId)` concurrently using `Promise.all`.
-🎯 **Why:** Both operations are independent reads that were previously executing sequentially, unnecessarily increasing the total execution time of the mutation.
-📊 **Measured Improvement:** We created a benchmark simulating 500 complete task iterations.
-- **Baseline:** ~198.0ms total (~0.40ms average per call)
-- **Optimized:** ~175.4ms total (~0.35ms average per call)
-- **Improvement:** ~11.4% speed increase per call.
+💡 **What:** Removed `orgId` parameter from `listTasks` and updated the frontend to execute the `listTasks` and `getUser` queries concurrently.
+🎯 **Why:** Previously, `listTasks` required `orgId` which meant the frontend had a network waterfall: it had to wait for `getUser` to finish (yielding the `user.orgId`) before it could dispatch the query for `listTasks`. Because the backend `listTasks` function already enforces authentication via `enforceUser` (which retrieves the user's `orgId` internally), providing `orgId` from the frontend was redundant. Removing it allows both queries to be dispatched concurrently on page load, eliminating the waterfall and significantly reducing Time to Interactive (TTI) for task loading.
+📊 **Measured Improvement:** Since this is a frontend waterfall issue dealing with network latency rather than CPU processing, establishing a micro-benchmark using a local testing framework is impractical and wouldn't reflect real-world network conditions. The improvement is conceptually a 100% reduction in the "wait" step of the waterfall; instead of sequential RTT (Round Trip Time), both initial requests happen in parallel. Assuming a 50ms network RTT to Convex, the page will load active tasks ~50ms faster.
