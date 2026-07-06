@@ -26,7 +26,7 @@ export default function Home() {
   // Query active tasks
   const { results: tasks } = usePaginatedQuery(
     api.functions.listTasks,
-    user && isAuthenticated ? { orgId: user.orgId } : "skip",
+    isAuthenticated ? {} : "skip",
     { initialNumItems: 10 }
   );
   const activeTasks = tasks ?? [];
