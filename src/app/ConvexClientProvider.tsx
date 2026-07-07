@@ -40,8 +40,8 @@ function useAuthFromAuthKit() {
         }
 
         return (await getAccessToken()) ?? null;
-      } catch {
-        console.error('Failed to get access token');
+      } catch (error) {
+        console.error('Failed to get access token', error instanceof Error ? error.message : 'Unknown error');
         return null;
       }
     },
