@@ -1,6 +1,6 @@
-import { render } from '@testing-library/react';
+import { render, renderHook } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { ConvexClientProvider } from './ConvexClientProvider';
+import { ConvexClientProvider, useAuthFromAuthKit } from './ConvexClientProvider';
 import React from 'react';
 
 // Mock dependencies
@@ -62,5 +62,17 @@ describe('ConvexClientProvider', () => {
     }).toThrow('NEXT_PUBLIC_CONVEX_URL environment variable is not defined');
 
     consoleError.mockRestore();
+  });
+});
+
+
+describe('useAuthFromAuthKit', () => {
+  it('fetchAccessToken returns null when user is null', async () => {
+    const { result } = renderHook(() => useAuthFromAuthKit());
+
+    // fetchAccessToken is async
+    const token = await result.current.fetchAccessToken();
+
+    expect(token).toBeNull();
   });
 });
