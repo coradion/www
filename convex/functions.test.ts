@@ -193,6 +193,32 @@ describe("tasks", () => {
     await expect(tWithIdentity2.mutation(api.functions.completeTask, { taskId })).rejects.toThrow("Unauthorized to access this task");
   });
 
+  it("should throw an error when completing a task from a different user in the same org", async () => {
+    const t = initTest();
+
+    // Setup: Create org 1 and user 1
+    const orgId = await setupUserAndOrg(t, "user_1", "org_same");
+
+    // Setup: Create user 2 in the same org
+    await t.run(async (ctx) => {
+      await ctx.db.insert("users", {
+        tokenIdentifier: "user_2",
+        orgId: orgId,
+        role: "admin",
+      });
+    });
+
+    // User 1 creates a task
+    const taskId = await captureTask(t, "user_1", "Test task org 1");
+
+    // Action: User 2 tries to complete User 1's task
+    // Using any as there is a missing field required but tests don't have typing locally, see memory.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const tWithIdentity2 = t.withIdentity({ tokenIdentifier: "user_2", subject: "user_2" } as any);
+    await expect(tWithIdentity2.mutation(api.functions.completeTask, { taskId })).rejects.toThrow("Unauthorized to access this task");
+  });
+
+
   it("should complete a task when authenticated and authorized", async () => {
     const t = initTest();
 
