@@ -139,12 +139,10 @@ describe("Home Page", () => {
       results: [{ _id: "task-1", rawCapture: "Test task to complete" }],
       status: "Exhausted",
       loadMore: vi.fn()
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } as any);
+    } as unknown as ReturnType<typeof usePaginatedQuery>);
 
     vi.mocked(useMutation).mockImplementation(() => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return vi.fn().mockRejectedValue(new Error("Failed to complete task")) as any;
+        return vi.fn().mockRejectedValue(new Error("Failed to complete task")) as unknown as ReturnType<typeof useMutation>;
     });
 
     const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
@@ -171,8 +169,7 @@ describe("Home Page", () => {
     } as unknown as ReturnType<typeof authKitComponents.useAuth>);
 
     vi.mocked(useMutation).mockImplementation(() => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return vi.fn().mockRejectedValue(new Error("Failed to create task")) as any;
+        return vi.fn().mockRejectedValue(new Error("Failed to create task")) as unknown as ReturnType<typeof useMutation>;
     });
 
     const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
