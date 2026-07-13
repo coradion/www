@@ -140,7 +140,7 @@ export const completeTask = mutation({
       throw new Error("Task not found");
     }
 
-    if (task.orgId !== user.orgId) {
+    if (task.orgId !== user.orgId || task.userId !== user._id) {
       throw new Error("Unauthorized to access this task");
     }
 
