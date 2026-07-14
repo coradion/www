@@ -41,6 +41,10 @@ export const createTask = mutation({
     rawCapture: v.string(),
   },
   handler: async (ctx, args) => {
+    if (args.rawCapture.trim().length === 0) {
+      throw new ConvexError("rawCapture cannot be empty");
+    }
+
     if (args.rawCapture.length > 4096) {
       throw new ConvexError("rawCapture exceeds maximum length of 4096 characters");
     }

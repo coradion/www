@@ -68,6 +68,24 @@ describe("tasks", () => {
   });
 
 
+  it("should throw an error when rawCapture is empty or whitespace", async () => {
+    const t = initTest();
+
+    // Setup: Create an org and user
+    await setupUserAndOrg(t, "user_empty", "org_empty");
+
+    // Action: Create a task with empty/whitespace string
+    const tWithIdentity = t.withIdentity({ tokenIdentifier: "user_empty", subject: "user_empty" });
+    const promise1 = tWithIdentity.mutation(api.functions.createTask, { rawCapture: "" });
+    const promise2 = tWithIdentity.mutation(api.functions.createTask, { rawCapture: "   " });
+    const promise3 = tWithIdentity.mutation(api.functions.createTask, { rawCapture: "\n\t" });
+
+    // Validation: Check that it throws an error
+    await expect(promise1).rejects.toThrow("rawCapture cannot be empty");
+    await expect(promise2).rejects.toThrow("rawCapture cannot be empty");
+    await expect(promise3).rejects.toThrow("rawCapture cannot be empty");
+  });
+
   it("should throw an error when rawCapture exceeds the maximum length", async () => {
     const t = initTest();
 
